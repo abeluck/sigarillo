@@ -1,0 +1,22 @@
+<div class="notification is-info">Only the Signal <strong>staging</strong> server is used.</div>
+{{#if error}}
+    <div class="notification is-warning">
+        {{error}}
+    </div>
+{{/if}}
+
+<form class="" method="post" action="/bot/verify">
+    <div class="field">
+        <label class="label" for="code">Enter verification code for {{bot.number}}:</label>
+        <div class="control">
+            <input class="input is-large" name="code" type="text" placeholder="" autofocus="">
+        </div>
+    </div>
+
+    <input name="botId" type="hidden" value="{{ bot.id }}">
+    <input name="number" type="hidden" value="{{ bot.number }}">
+    <button class="button is-block is-info is-large is-fullwidth">Verify</button>
+    <button class="button is-block is-large is-fullwidth" formaction="/bot/register">New code</button>
+</form>
+
+<a href="/account">Back</a>

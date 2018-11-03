@@ -1,0 +1,63 @@
+<div class="container site-header">
+    <h1 class="title is-1">Signal Bots</h1>
+    <p class="subtitle">Welcome {{user.email}}</p>
+
+
+    <h2 class="title is-2">Your bots</h2>
+    <div class="notification is-info">Only the Signal <strong>staging</strong> server is used.</div>
+    <a class="button is-primary" href="/bot/register">Register Bot</a>
+    <table class="table is-fullwidth">
+        <thead>
+        <tr>
+            <th>Number</th>
+            <th>Verified</th>
+            <th>Token</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each bots as |bot|}}
+            <tr>
+                <th>{{bot.number}}</th>
+                <td>
+                    {{#if bot.is_verified}}
+                        <span class="icon has-text-success"><i class="fas fa-check-square"></i> </span> verified
+                    {{else}}
+                        <span class="icon has-text-warning"><i class="fas fa-exclamation-triangle"></i></span>
+                        <a href="/bot/verify?bot={{bot.id}}">verify now</a>
+                    {{/if}}
+                </td>
+                <td>
+                    <code>{{bot.token}}</code>
+                         <form class="" method="post" action="/bot/cycle">
+                            <input name="botId" type="hidden" value="{{ bot.id }}">
+                            <button class="button" title="Reset the token">
+                                 <span class="icon is-small"><i class="fa fa-sync"></i></span>
+                            </button>
+                        </form>
+                </td>
+                <td>
+                    <div class="field has-addons">
+                        {{#if bot.is_verified}}
+                            <p class="control">
+                                <a href="/bot/{{bot.token}}/send" class="button"
+                                   title="Send a message as this bot">Send</a></p>
+                            <p class="control">
+                                <a href="/bot/{{bot.token}}/receive" class="button" title="Receive messages for this bot">Receive</a>
+                            </p>
+                        {{/if}}
+                        <p class="control">
+                        <form class="" method="post" action="/bot/delete">
+                            <input name="botId" type="hidden" value="{{ bot.id }}">
+                            <button class="button  is-danger is-outlined" title="Delete this bot">
+                                Delete
+                            </button>
+                        </form>
+                        </p>
+                    </div>
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>

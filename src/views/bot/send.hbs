@@ -1,0 +1,25 @@
+{{#if error}}
+    <div class="notification is-warning">
+        {{error}}
+    </div>
+{{/if}}
+
+<form class="" method="post" action="/bot/{{bot.token}}/send">
+     <div class="field">
+        <label class="label" for="recipient">Recipient:</label>
+        <div class="control">
+            <input class="input is-large" name="recipient" type="text" placeholder="" autofocus="" value="{{recipient}}">
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label" for="message">Message:</label>
+        <div class="control">
+            <input class="input is-large" name="message" type="text" placeholder="" autofocus="" value="{{message}}">
+        </div>
+    </div>
+
+    <button class="button is-block is-info is-large is-fullwidth">Send</button>
+</form>
+
+<a href="/account">Back</a>

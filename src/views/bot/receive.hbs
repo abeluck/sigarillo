@@ -1,0 +1,19 @@
+{{#if error}}
+    <div class="notification is-warning">
+        {{error}}
+    </div>
+{{/if}}
+
+
+<h2 class="title is-2">Messages for {{bot.number}}</h2>
+{{# each messages as |message|}}
+<pre>
+From:  {{message.source}}
+On:  {{message.timestamp}}
+Body: {{message.message.body}}
+</pre>
+<br/>
+{{/each}}
+
+
+<a href="/account">Back</a>

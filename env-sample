@@ -1,0 +1,8 @@
+# copy me to .env and edit me
+
+NODE_ENV = development
+PORT = 3000
+SECRETS = changeme
+
+DB_CLIENT = pg
+DB_CONNECTION = postgres://siggy:siggy@localhost:5432/siggy_dev

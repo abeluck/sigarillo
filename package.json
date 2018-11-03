@@ -1,0 +1,61 @@
+{
+  "name": "signal-bots",
+  "version": "0.0.1",
+  "description": "bots for signal",
+  "main": "src/server.js",
+  "author": "Abel Luck <abel@guardianproject.info>",
+  "license": "AGPL-3.0-or-later",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abeluck/signal-bots.git"
+  },
+  "dependencies": {
+    "@throneless/libsignal-protocol": "0.1.3",
+    "@throneless/libsignal-service": "^0.1.5",
+    "bcrypt": "^3.0.2",
+    "bulma": "^0.7.2",
+    "bytebuffer": "5.0.1",
+    "bytes": "^3.0.0",
+    "chalk": "^2.4.1",
+    "dotenv": "^6.1.0",
+    "esm": "^3.0.84",
+    "handlebars": "^4.0.12",
+    "humanize-number": "^0.0.2",
+    "knex": "^0.15.2",
+    "koa": "^2.6.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-hbs": "^1.0.0",
+    "koa-mount": "^4.0.0",
+    "koa-passport": "^4.1.1",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.10.0",
+    "koa-static": "^5.0.0",
+    "koa2-sass": "^1.1.0",
+    "koa2-winston": "^3.0.2",
+    "logfmt": "^1.2.1",
+    "node-sass": "^4.9.4",
+    "passport-local": "^1.0.0",
+    "passthrough-counter": "^1.0.0",
+    "pg": "^7.6.0",
+    "ramda": "^0.25.0",
+    "sqlite3": "^4.0.3",
+    "uuid": "^3.3.2",
+    "winston": "^3.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "nodemon": "^1.18.5"
+  },
+  "scripts": {
+    "debug": "NODE_PATH=src ./node_modules/.bin/nodemon --inspect=172.28.128.6:9229 -L -e js,hbs,scss,css ./src/index.js",
+    "start": "NODE_PATH=src ./node_modules/.bin/nodemon -L -e js,hbs,scss,css ./src/index.js",
+    "production": "NODE_PATH=src node src/index.js",
+    "test": "NODE_PATH=src ./node_modules/.bin/eslint .",
+    "db:load": "knex seed:run --knexfile src/config/knexfile.js",
+    "db:migrate": "knex --knexfile src/config/knexfile.js migrate:latest",
+    "db:rollback": "knex --knexfile src/config/knexfile.js migrate:rollback"
+  }
+}
