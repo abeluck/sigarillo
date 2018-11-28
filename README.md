@@ -1,4 +1,5 @@
-# signal-bots
+# Sigarillo
+
 **This is a third-party effort, and is NOT a part of the official [Signal][0] project or any other project of [Open Whisper Systems][1].**
 
 **WARNING: Do not use this application, it is under development. It should not be regarded as secure, use at your own risk.**
@@ -58,7 +59,7 @@ A simple method for testing your bot's auth token. Requires no parameters. Retur
 
 **request**
 ```
-GET /bot/<TOKEN>
+GET /bot/<TOKEN>/
 ```
 
 ***response***
@@ -136,20 +137,18 @@ GET /bot/<TOKEN>/receive
 
 ## Todo
 
-* [ ] Find a better name for the project
-* [ ] Expand the JSON API for better bot usage
+* [x] ~~Find a better name for the project~~ (signal-bots is now Sigarillo)
+* [ ] Expand the JSON API for more use cases
 * [ ] Add tests
 * [ ] Robust error handling
 * [ ] Clean up UI
 * [ ] Examples of usage (webhook, simple bot, etc)
 
 ## License
-[<img src="https://www.gnu.org/graphics/gplv3-127x51.png" alt="GPLv3" >](http://www.gnu.org/licenses/gpl-3.0.html)
 
-signal-bots is a free software project licensed under the GNU General Public License v3.0 (GPLv3) by [Guardian Project](https://guardianproject.info).
+- License: [![](https://img.shields.io/badge/License-AGPL%203.0-lightgrey.svg)](https://github.com/abeluck/sigarillo/blob/master/LICENSE.md)
 
-It is derived in part from [Signal-Desktop](https://github.com/WhisperSystems/Signal-Desktop) which is Copyright (c) 2014-2018 Open Whisper Systems, also under the GPLv3.
-
+Sigarillo is a free software project licensed under the GNU Affero General Public License v3.0 (GNU AGPLv3) by [Guardian Project](https://guardianproject.info).
 
 [0]: https://signal.org
 [1]:  https://whispersystems.org

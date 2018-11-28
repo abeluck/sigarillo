@@ -1,14 +1,14 @@
 {
-  "name": "signal-bots",
+  "name": "sigarillo",
   "version": "0.0.1",
-  "description": "bots for signal",
+  "description": "write signal bots with http",
   "main": "src/server.js",
   "author": "Abel Luck <abel@guardianproject.info>",
   "license": "AGPL-3.0-or-later",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/abeluck/signal-bots.git"
+    "url": "git+https://github.com/abeluck/sigarillo.git"
   },
   "dependencies": {
     "@throneless/libsignal-protocol": "0.1.3",
