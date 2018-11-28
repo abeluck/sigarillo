@@ -29,6 +29,7 @@ function init(app) {
   }))
   router.get('/logout', account.logout)
 
+  router.get('/bot/:token', bot.getSelf)
   router.post('/bot/:token/send', bot.send)
   router.get('/bot/:token/receive', bot.receive)
 

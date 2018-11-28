@@ -1,4 +1,4 @@
-import SignalApi from 'libsignal-service-javascript'
+import SignalApi from '@throneless/libsignal-service'
 import ByteBuffer from 'bytebuffer'
 import SignalProtocolStore from './signal-protocol-store'
 import LocalStorageMemory from './local-storage-memory'
@@ -34,7 +34,7 @@ SignalService.prototype = {
       this.protocolStore,
     )
     const now = Date.now()
-    return messageSender
+    const result = await messageSender
       .sendMessageToNumber(
         recipient,
         message,
@@ -44,6 +44,21 @@ SignalService.prototype = {
         undefined,
         this.protocolStore.get('profileKey'),
       )
+    if (!result || result.errors.length > 0) {
+      logger.error('Message sending failed. See debug level logs for more (sensitive) information)')
+      if (result) {
+        logger.debug(JSON.stringify(result, null, 2))
+      } else {
+        logger.debug('result was null')
+      }
+      throw new Error('Message sending failed')
+    }
+    return {
+      recipient,
+      source: this.number,
+      status: 'sent',
+      timestamp: now,
+    }
   },
   async receive() {
     const signalingKey = ByteBuffer.wrap(
@@ -64,6 +79,9 @@ SignalService.prototype = {
         return resolve(messages)
       })
       messageReceiver.addEventListener('message', (ev) => {
+        // logger.info("MESSAGE RECEIVED")
+
+        // console.log(JSON.stringify(ev, null, 2))
         messages.push({
           source: ev.data.source.toString(),
           timestamp: ev.data.timestamp.toString(),

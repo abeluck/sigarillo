@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import {
   getString, isNumberSane, jsonThing, unencodeNumber,
-} from 'libsignal-service-javascript/src/helpers'
+} from '@throneless/libsignal-service/src/helpers'
 import libsignal from '@throneless/libsignal-protocol'
 import ByteBuffer from 'bytebuffer'
 

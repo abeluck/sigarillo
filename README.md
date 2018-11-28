@@ -51,7 +51,32 @@ $ yarn run debug
 
 1. Use the `Accept: application/json` header
 2. `TOKEN` should be treated like a password.
-### SENDING
+
+### Get bot info
+
+A simple method for testing your bot's auth token. Requires no parameters. Returns basic information about the bot.
+
+**request**
+```
+GET /bot/<TOKEN>
+```
+
+***response***
+
+```json
+{
+    "id": "129f1757-e706-452e-aa1c-4994a95e1092",
+    "number": "+15555555552",
+    "user_id": "845ae4d0-f2c3-5342-91a2-5b45cb8db57c",
+    "token": "8129c0b4-0b96-4486-84fc-c3dd7b03f846",
+    "is_verified": true,
+    "created_at": "2018-11-02T11:36:24.273Z",
+    "updated_at": "2018-11-02T11:36:24.273Z"
+}
+
+```
+
+### Sending
 
 **request**
 ```
@@ -65,9 +90,17 @@ POST /bot/<TOKEN>/send
 
 **response**
 ```json
- { "status": "sent" }
+{
+  "result": {
+    "recipient": "+15555555551",
+    "source": "+15555555552",
+    "status": "sent",
+    "timestamp": "1543420505142"
+  }
+}
 ```
-### RECEIVE
+
+### Receive
 
 **request**
 ```

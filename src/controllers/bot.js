@@ -91,6 +91,21 @@ const bots = {
       bot,
     })
   },
+  async getSelf(ctx) {
+    const { token } = ctx.params
+    const bot = await Bot.findBotByToken(ctx.app.db, token)
+    if (!bot) throw new NotFoundError()
+
+    switch (ctx.accepts('html', 'json')) {
+      case 'html':
+        ctx.redirect('/account')
+        break
+      case 'json':
+      default:
+        ctx.body = bot
+        break
+    }
+  },
   async send(ctx) {
     return ctx.app.db.transaction(async (tx) => {
       const { token } = ctx.params
@@ -100,8 +115,10 @@ const bots = {
       const signalStore = await SignalStore.getStore(tx, bot.id)
       const signal = new SignalService(bot.number, signalStore.data)
       let errorMessage
+      let result
       try {
-        await signal.send(recipient, message)
+        result = await signal.send(recipient, message)
+        console.log(JSON.stringify(result, null, 2))
       } catch (e) {
         if (e.errors.length > 0) {
           log.error(e.errors[0])
@@ -120,8 +137,9 @@ const bots = {
           break
         case 'json':
         default:
-          ctx.status = 200
-          ctx.body = { status: 'sent' }
+          if (errorMessage) ctx.status = 500
+          else ctx.status = 200
+          ctx.body = { result, error: errorMessage }
           break
       }
     })
