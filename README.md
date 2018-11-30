@@ -1,21 +1,46 @@
 # Sigarillo
 
-**This is a third-party effort, and is NOT a part of the official [Signal][0] project or any other project of [Open Whisper Systems][1].**
+> A (micro) web-application to make web-based [Signal][0] bots easy to write.
 
-**WARNING: Do not use this application, it is under development. It should not be regarded as secure, use at your own risk.**
+Built on the library [libsignal-service-javascript][2] by [Josh King][3] and of
+course the great efforts of the fine folks at Open Whisper Systems.
 
+**Implemented features:**
 
-> A web application to make web-based signal bots easy to write. This application exposes an admin UI to register phone numbers with [Signal][0].
+* Register a number with Signal
+* Verify a number with the SMS code
+* Persistence of account data and keys
+* Exposes HTTP endpoints for:
+  * sending messages
+  * receiving messages
 
-Built on the library [libsignal-service-javascript][2] by [Josh King][3] and of course the great efforts of the fine folks at Open Whisper Systems.
+**WARNING: This application has not been audited. It should not be regarded as
+secure, use at your own risk.**
 
-Currently it supports:
+**This is a third-party effort, and is NOT a part of the official [Signal][0]
+project or any other project of [Open Whisper Systems][1].**
 
-* Registering a signal number
-* Verifying it with the SMS code
-* Using a verified number to:
-  * send messages via HTTP POST
-  * receive messages
+### What? Why?
+
+When you need to communicate over Signal from a different service, for example,
+[a help desk](http://zammad.org/) or other web-app, you don't want to have to
+port the signal-protocol to your stack (unless you *do* want that, in which case
+Sigarillo isn't for you).
+
+You might be willing to make certain security tradeoffs, for example,
+terminating the end-to-end encryption of the Signal protocol at Sigarillo
+rather than at your application.
+
+You also understand that you should secure Sigarillo with an HTTPS reverse
+proxy, or even better, deploy Sigarillo on the same box as your consuming service
+and don't expose it to the wild at all!
+
+If this all sounds acceptable to you, then you might like Sigarillo.
+
+Sigarillo stores keys and Signal account data in a postgres database. It does
+not come with HTTPS out of the box. Your Sigarillo API tokens essentially give
+full access to your Signal account (to the extent that Sigarillo has
+implemented Signal features). Use with caution. Use with caution.
 
 ## Usage
 
@@ -26,7 +51,7 @@ For local development
 * yarn
 * postgresql
 
-### Run the damn thing
+### Run the thing
 
 ```bash
 # edit env file
@@ -138,11 +163,12 @@ GET /bot/<TOKEN>/receive
 ## Todo
 
 * [x] ~~Find a better name for the project~~ (signal-bots is now Sigarillo)
-* [ ] Expand the JSON API for more use cases
 * [ ] Add tests
+* [ ] Voice verification
+* [ ] Attachments
 * [ ] Robust error handling
-* [ ] Clean up UI
 * [ ] Examples of usage (webhook, simple bot, etc)
+* [ ] Clean up UI
 
 ## License
 
