@@ -79,6 +79,15 @@ $ yarn run debug
 # login at http://localhost:3000 with user admin@demo.com:admin
 ```
 
+### Do the docker dance
+
+```bash
+
+docker build -t sigarillo .
+# edit docker-compose.yml.sample to your hearts content
+docker-compose up
+```
+
 ## HTTP API 
 
 1. Use the `Accept: application/json` header

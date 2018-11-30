@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  sigarillo:
+    image: sigarillo
+    ports:
+      - "3000:3000"
+    environment:
+      - SECRETS=change_me
+      - NODE_ENV=production
+      - DB_CLIENT=pg
+      - DB_CONNECTION=postgres://user:pass@HOST:5432/DBNAME
+#    volumes:
+#      - sigarillo-data:/var/lib/sigarillo
+
+#volumes:
+#  sigarillo-data:
+
+# Note: the volume is only necessary when using sqlite
