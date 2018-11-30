@@ -17,7 +17,7 @@ validateEnv('SECRETS', isNotEmpty)
 // noinspection ES6ConvertRequireIntoImport
 module.exports = {
   site: {
-    name: 'Signal Bots',
+    name: 'Sigarillo',
     secrets: parseSecrets(process.env.SECRETS),
   },
   server: {

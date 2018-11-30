@@ -1,10 +1,12 @@
 <div class="container site-header">
-    <h1 class="title is-1">Signal Bots</h1>
+    <h1 class="title is-1">Sigarillo Bots</h1>
     <p class="subtitle">Welcome {{user.email}}</p>
 
 
     <h2 class="title is-2">Your bots</h2>
-    <div class="notification is-info">Only the Signal <strong>staging</strong> server is used.</div>
+    {{#unless isProd }}
+        <div class="notification is-info">Only the Signal <strong>staging</strong> server is used.</div>
+    {{/unless}}
     <a class="button is-primary" href="/bot/register">Register Bot</a>
     <table class="table is-fullwidth">
         <thead>

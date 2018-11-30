@@ -3,7 +3,7 @@ const path = require('path')
 // noinspection ES6ConvertRequireIntoImport
 const R = require('ramda')
 
-const ROOT = path.resolve(__dirname, '..', '..')
+const ROOT = path.resolve(__dirname, '..')
 // noinspection ES6ConvertRequireIntoImport
 require('dotenv').config({ path: path.join(ROOT, '.env') })
 

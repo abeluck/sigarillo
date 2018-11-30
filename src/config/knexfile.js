@@ -9,12 +9,12 @@ const options = {
   client: DB_CLIENT || 'sqlite3',
   connection: DB_CONNECTION || { filename: path.join(ROOT, '../data/dev.sqlite3') },
   migrations: {
-    directory: path.join(ROOT, 'src/db/migrations'),
+    directory: path.join(ROOT, 'db/migrations'),
     tableName: 'migrations',
   },
   debug: false,
   seeds: {
-    directory: path.join(ROOT, 'src/db/seeds'),
+    directory: path.join(ROOT, 'db/seeds'),
   },
   useNullAsDefault: !DB_CLIENT || DB_CLIENT === 'sqlite3',
 }

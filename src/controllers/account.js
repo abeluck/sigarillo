@@ -17,6 +17,7 @@ async function index(ctx) {
   const bots = await Bot.findAllBotsForUser(ctx.app.db, user.id)
   await ctx.render('account', {
     title: config.site.name,
+    isProd: config.env.isProd ,
     user,
     bots,
   })

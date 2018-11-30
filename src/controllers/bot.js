@@ -2,11 +2,14 @@ import SignalService from '../lib/signal'
 import Bot from '../models/bot'
 import { BadRequestError, NotFoundError } from '../errors'
 import SignalStore from '../models/signalstore'
+import config from '../config'
 import log from '../logger'
 
 const bots = {
   async registerBotForm(ctx) {
-    await ctx.render('bot/register', {})
+    await ctx.render('bot/register', {
+      isProd: config.env.isProd,
+    })
   },
 
   async registerBot(ctx) {
@@ -28,6 +31,7 @@ const bots = {
       await SignalStore.updateStore(ctx.app.db, bot.id, signal.getStoreData())
       await ctx.render('bot/verify', {
         bot,
+        isProd: config.env.isProd
       })
     } catch (err) {
       log.error(err)

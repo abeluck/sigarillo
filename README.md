@@ -57,6 +57,12 @@ For local development
 # edit env file
 $ cp env-sample .env
 $ vim .env
+```
+
+Note: By default the Signal staging server will be used, unless the `NODE_ENV`
+variable is set to `production`.
+
+```bash
 
 # install deps
 $ yarn
@@ -172,7 +178,7 @@ GET /bot/<TOKEN>/receive
 
 ## License
 
-- License: [![](https://img.shields.io/badge/License-AGPL%203.0-lightgrey.svg)](https://github.com/abeluck/sigarillo/blob/master/LICENSE.md)
+[![License GNU AGPL v3.0](https://img.shields.io/badge/License-AGPL%203.0-lightgrey.svg)](https://github.com/abeluck/sigarillo/blob/master/LICENSE.md)
 
 Sigarillo is a free software project licensed under the GNU Affero General Public License v3.0 (GNU AGPLv3) by [Guardian Project](https://guardianproject.info).
 
