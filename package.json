@@ -46,14 +46,13 @@
   "devDependencies": {
     "eslint": "^5.3.0",
     "eslint-config-airbnb-base": "13.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "nodemon": "^1.18.5"
+    "eslint-plugin-import": "^2.14.0"
   },
   "scripts": {
     "debug": "NODE_PATH=src ./node_modules/.bin/nodemon --inspect=172.28.128.4:9229 -L -e js,hbs,scss,css ./src/index.js",
     "start": "NODE_PATH=src ./node_modules/.bin/nodemon -L -e js,hbs,scss,css ./src/index.js",
     "production": "NODE_PATH=src node src/index.js",
-    "test": "NODE_PATH=src ./node_modules/.bin/eslint .",
+    "lint": "NODE_PATH=src ./node_modules/.bin/eslint .",
     "db:load": "knex seed:run --knexfile src/config/knexfile.js",
     "db:migrate": "knex --knexfile src/config/knexfile.js migrate:latest",
     "db:rollback": "knex --knexfile src/config/knexfile.js migrate:rollback"
