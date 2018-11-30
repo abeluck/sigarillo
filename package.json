@@ -24,8 +24,6 @@
     "humanize-number": "^0.0.2",
     "knex": "^0.15.2",
     "koa": "^2.6.1",
-    "koa2-sass": "^1.1.0",
-    "koa2-winston": "^3.0.2",
     "koa-bodyparser": "^4.2.1",
     "koa-hbs": "^1.0.0",
     "koa-mount": "^4.0.0",
@@ -33,6 +31,8 @@
     "koa-router": "^7.4.0",
     "koa-session": "^5.10.0",
     "koa-static": "^5.0.0",
+    "koa2-sass": "^1.1.0",
+    "koa2-winston": "^3.0.2",
     "logfmt": "^1.2.1",
     "node-sass": "^4.9.4",
     "passport-local": "^1.0.0",
@@ -41,12 +41,14 @@
     "ramda": "^0.25.0",
     "sqlite3": "^4.0.3",
     "uuid": "^3.3.2",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "eslint": "^5.3.0",
     "eslint-config-airbnb-base": "13.1.0",
-    "eslint-plugin-import": "^2.14.0"
+    "eslint-plugin-import": "^2.14.0",
+    "nodemon": "^1.18.7"
   },
   "scripts": {
     "debug": "NODE_PATH=src ./node_modules/.bin/nodemon --inspect=172.28.128.4:9229 -L -e js,hbs,scss,css ./src/index.js",

@@ -25,4 +25,5 @@ ENV DATA_PATH=/var/lib/sigarillo
 ENV DB_CLIENT=
 ENV DB_CONNECTION=
 COPY src ./src
+COPY package.json ./
 CMD ["dumb-init", "node", "src/index.js"]

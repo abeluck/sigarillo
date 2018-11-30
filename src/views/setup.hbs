@@ -1,0 +1,76 @@
+<section class="hero is-fullheight">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <div class="column is-4 is-offset-4">
+                <h3 class="title has-text-grey">Welcome to Sigarillo</h3>
+                <div class="notification is-warning">This project is under development and should not be considered
+                    secure.
+                </div>
+                <div class="box">
+                    <h4 class="subtitle has-text-grey">Create your admin user</h4>
+                    {{#if errorMessage}}
+                        <div class="notification is-warning">
+                            {{errorMessage}}
+                        </div>
+                    {{/if}}
+                    <form class="login" method="post" action="/setup">
+                        <div class="field">
+                            <div class="control">
+                                <input class="input is-large {{#isEmailAddressError}}is-dagner{{/isEmailAddressError}}"
+                                       name="email" type="email" placeholder="Your Email"
+                                       value="{{ email }}"
+                                       autofocus="">
+                            </div>
+                            {{#if isUserExistsError}}
+                                <p class="help is-danger">
+                                    This email address is already taken. Please choose a new one.
+                                </p>
+                            {{/if}}
+                            {{#if isEmailValidityError }}
+                                <p class="help is-danger">
+                                    Your email address is not valid. Please double check!
+                                </p>
+                            {{/if}}
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <input class="input is-large {{#isPasswordStrengthError}}is-danger{{/isPasswordStrengthError}}"
+                                       name="password" type="password"
+                                       placeholder="Your Password">
+                            </div>
+                            {{#if isPasswordStrengthError}}
+                                <p class="help is-danger">
+                                    {{passwordStrengthError}}
+                                </p>
+                                <p class="help is-danger">
+                                    This password would take {{passwordCrackTime}} to crack.
+                                    {{# each passwordSuggestions as |suggestion|}}
+                                        {{suggestion}}
+                                    {{/each}}
+                                </p>
+                            {{/if}}
+                        </div>
+
+                        <div class="field">
+                            <div class="control">
+                                <input class="input is-large {{#isPasswordMatchError}}is-danger{{/isPasswordMatchError}}"
+                                       name="passwordConfirm" type="password"
+                                       placeholder="Confirm password">
+                            </div>
+                            {{#if isPasswordMatchError }}
+                                <p class="help is-danger">
+                                    The passwords do not match. Please double-check!
+                                </p>
+                            {{/if}}
+                        </div>
+
+                        <button class="button is-block is-info is-large is-fullwidth">Create Admin User</button>
+                    </form>
+                </div>
+                <p class="has-text-grey">
+                </p>
+            </div>
+        </div>
+    </div>
+</section>

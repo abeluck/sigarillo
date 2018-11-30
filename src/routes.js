@@ -23,6 +23,8 @@ function init(app) {
   // un-authenticated routes
   router.get('/', main.index)
   router.get('/login', account.loginForm)
+  router.get('/setup', account.setupForm)
+  router.post('/setup', account.setup)
   router.post('/login', passport.authenticate('local', {
     successRedirect: '/account',
     failureRedirect: '/login',

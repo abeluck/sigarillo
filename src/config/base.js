@@ -5,7 +5,7 @@ const R = require('ramda')
 
 const ROOT = path.resolve(__dirname, '..')
 // noinspection ES6ConvertRequireIntoImport
-require('dotenv').config({ path: path.join(ROOT, '.env') })
+require('dotenv').config({ path: path.join(ROOT, '..', '.env') })
 
 
 const defaultEnv = R.defaultTo('development')
