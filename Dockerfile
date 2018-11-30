@@ -1,19 +1,19 @@
 FROM node:10-stretch  as builder
 LABEL maintainer="Abel Luck <abel@guardianproject.info>"
 RUN mkdir -p /usr/src/app
-RUN chown node:node /usr/src/app
+COPY package.json yarn.lock /usr/src/app/
+RUN chown -R node:node /usr/src/app
 USER node
 WORKDIR /usr/src/app
-COPY package.json yarn.lock ./
 RUN yarn --production
 
 FROM node:10-stretch
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y --no-install-recommends \
     dumb-init
 RUN mkdir -p /usr/src/app
-RUN chown node:node /usr/src/app
+RUN chown -R node:node /usr/src/app
 RUN mkdir -p /var/lib/sigarillo
-RUN chown node:node /var/lib/sigarillo
+RUN chown -R node:node /var/lib/sigarillo
 USER node
 WORKDIR /usr/src/app
 COPY --from=builder /usr/src/app/node_modules ./node_modules
