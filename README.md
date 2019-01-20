@@ -83,7 +83,7 @@ $ yarn run debug
 
 ```bash
 
-docker build -t sigarillo .
+make docker_build
 # edit docker-compose.yml.sample to your hearts content
 docker-compose up
 ```
