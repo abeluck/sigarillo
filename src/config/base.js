@@ -35,7 +35,8 @@ function normalizePort(val) {
 
 const validateEnv = (key, predicate, errorMessage = '') => {
   const message = errorMessage || `Environment variable ${key} must be defined.`
-  if (!predicate(key)) throw new Error(message)
+  const val = process.env[key] || undefined
+  if (!predicate(val)) throw new Error(message)
 }
 
 module.exports = {

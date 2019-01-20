@@ -1,5 +1,7 @@
 /* eslint-disable global-require */
 // noinspection ES6ConvertRequireIntoImport
+const R = require('ramda')
+// noinspection ES6ConvertRequireIntoImport
 const {
   defaultHost, defaultPort,
   defaultDataPath, isNotEmpty,
@@ -8,12 +10,12 @@ const {
 // noinspection ES6ConvertRequireIntoImport
 const knexfile = require('./knexfile')
 
-
 function parseSecrets(commaString) {
   return commaString.split(',')
 }
 
-validateEnv('SECRETS', isNotEmpty)
+const isNotChangeMe = R.complement(R.equals('changeme'))
+validateEnv('SECRETS', R.both(isNotEmpty, isNotChangeMe), "The env var 'SECRETS' must be set")
 // noinspection ES6ConvertRequireIntoImport
 module.exports = {
   site: {
