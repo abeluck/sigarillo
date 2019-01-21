@@ -1,5 +1,6 @@
 # Image and binary can be overidden with env vars.
-DOCKER_IMAGE ?= abeluck/sigarillo
+DOCKER_IMAGE ?= digiresilience/sigarillo
+DOCKER_ARGS ?= --disable-content-trust=false
 
 # Get the latest commit.
 GIT_COMMIT = $(strip $(shell git rev-parse --short HEAD))
@@ -50,7 +51,7 @@ release: docker_build docker_push output
 
 
 docker_build:
-	docker build \
+	docker build  ${DOCKER_ARGS} \
   --build-arg BUILD_DATE=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ") \
   --build-arg VERSION=$(PACKAGE_VERSION) \
   --build-arg VCS_URL=$(shell git config --get remote.origin.url) \
@@ -62,8 +63,8 @@ docker_push:
 	docker tag $(DOCKER_IMAGE):$(DOCKER_TAG) $(DOCKER_IMAGE):latest
 
 	# Push to DockerHub
-	docker push $(DOCKER_IMAGE):$(DOCKER_TAG)
-	docker push $(DOCKER_IMAGE):latest
+	docker push ${DOCKER_ARGS} $(DOCKER_IMAGE):$(DOCKER_TAG)
+	docker push ${DOCKER_ARGS} $(DOCKER_IMAGE):latest
 
 output:
 	@echo Docker Image: $(DOCKER_IMAGE):$(DOCKER_TAG)

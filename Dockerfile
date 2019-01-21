@@ -1,10 +1,11 @@
 FROM node:10-stretch  as builder
 LABEL maintainer="Abel Luck <abel@guardianproject.info>"
-RUN mkdir -p /usr/src/app
-COPY package.json yarn.lock /usr/src/app/
-RUN chown -R node:node /usr/src/app
+ARG SIGARILLO_DIR=/opt/sigarillo
+RUN mkdir -p ${SIGARILLO_DIR}/
+COPY package.json yarn.lock ${SIGARILLO_DIR}/
+RUN chown -R node:node ${SIGARILLO_DIR}/
 USER node
-WORKDIR /usr/src/app
+WORKDIR ${SIGARILLO_DIR}
 RUN yarn --production
 
 FROM node:10-stretch
@@ -21,24 +22,28 @@ LABEL org.label-schema.build-date=$BUILD_DATE
 LABEL org.label-schema.vcs-url=$VCS_URL
 LABEL org.label-schema.vcs-ref=$VCS_REF
 LABEL org.label-schema.version=$VERSION
+ARG SIGARILLO_DIR=/opt/sigarillo
+ENV SIGARILLO_DIR ${SIGARILLO_DIR}
+ENV SIGARILLO_READY_FILE ${SIGARILLO_DIR}/sigarillo.ready
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y --no-install-recommends \
     dumb-init
-RUN mkdir -p /usr/src/app
-RUN chown -R node:node /usr/src/app
+RUN mkdir -p ${SIGARILLO_DIR}
+RUN chown -R node:node ${SIGARILLO_DIR}/
 RUN mkdir -p /var/lib/sigarillo
 RUN chown -R node:node /var/lib/sigarillo
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 USER node
-WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/node_modules ./node_modules
+WORKDIR ${SIGARILLO_DIR}
+COPY --from=builder ${SIGARILLO_DIR}/node_modules ./node_modules
 EXPOSE 3000
-ENV PORT=3000
-ENV SECRETS=changeme
-ENV NODE_ENV=production
-ENV DATA_PATH=/var/lib/sigarillo
-ENV DB_CLIENT=
-ENV DB_CONNECTION=
+ENV PORT 3000
+ENV SECRETS changeme
+ENV NODE_ENV production
+ENV DATA_PATH /var/lib/sigarillo
+ENV DB_CLIENT pg
 COPY src ./src
 COPY package.json ./
-CMD ["dumb-init", "node", "src/index.js"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
