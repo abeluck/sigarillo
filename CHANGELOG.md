@@ -10,24 +10,23 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-n/a
+- Support for verification of a number via voice call (in addition to SMS)
 
 ### Changed
 
-* API is more forgiving when users enter numbers or verification codes with
+- API is more forgiving when users enter numbers or verification codes with
   spaces or punctuation
-* Staging server warning is consistently and properly applied
+- Staging server warning is consistently and properly applied
 
 ### Removed
 
 n/a
 
-
 ## [0.0.1] - 2019-01-21
 
 ### Added
 
-* Initial release of sigarillo
+- Initial release of sigarillo
 
-[Unreleased]: https://gitlab.com/digiresilience/link/sigarillo/compare/0.0.1...master
+[unreleased]: https://gitlab.com/digiresilience/link/sigarillo/compare/0.0.1...master
 [0.0.1]: https://gitlab.com/digiresilience/link/sigarillo/commits/0.0.1

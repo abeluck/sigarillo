@@ -31,8 +31,8 @@ const bots = {
         ctx.app.db,
         bot.id
       );
-      const signal = new SignalService(sanitizedNumber, signalStore.data);
-      await signal.requestSMSVerification(sanitizedNumber);
+      const signal = new SignalService(bot.number, signalStore.data);
+      await signal.requestSMSVerification(bot.number);
       await SignalStore.updateStore(ctx.app.db, bot.id, signal.getStoreData());
       await ctx.render("bot/verify", {
         bot,
@@ -42,6 +42,38 @@ const bots = {
       log.error(err);
       await ctx.render("error", {
         message: "Error requesting SMS verification",
+        errorData: JSON.stringify(err)
+      });
+    }
+  },
+  async requestVoiceVerification(ctx) {
+    const { id: userId } = ctx.state.user;
+    const { botId } = ctx.request.body;
+    let bot;
+    if (botId) {
+      bot = await Bot.findBotForUser(ctx.app.db, userId, botId);
+      if (!bot) throw new NotFoundError();
+    } else {
+      throw new BadRequestError();
+    }
+    try {
+      const signalStore = await SignalStore.getOrCreateStore(
+        ctx.app.db,
+        bot.id
+      );
+      const signal = new SignalService(bot.number, signalStore.data);
+      await signal.requestVoiceVerification(bot.number);
+      await SignalStore.updateStore(ctx.app.db, bot.id, signal.getStoreData());
+      await ctx.render("bot/verify", {
+        bot,
+        isProd: config.env.isProd
+      });
+    } catch (err) {
+      log.error("Error requesting voice verification");
+      log.error(err);
+      ctx.status = 500;
+      await ctx.render("error", {
+        message: "Error requesting voice verification",
         errorData: JSON.stringify(err)
       });
     }

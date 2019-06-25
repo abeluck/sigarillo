@@ -24,6 +24,9 @@ SignalService.prototype = {
   async requestSMSVerification(number) {
     return this.accountManager.requestSMSVerification(number);
   },
+  async requestVoiceVerification(number) {
+    return this.accountManager.requestVoiceVerification(number);
+  },
   async verifyNumber(number, code) {
     return this.accountManager.registerSingleDevice(number, code);
   },

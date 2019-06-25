@@ -12,6 +12,7 @@ function init(app) {
   router.get("/account", auth, account.index);
   router.get("/bot/register", auth, bot.registerBotForm);
   router.post("/bot/register", auth, bot.registerBot);
+  router.post("/bot/voice-verify", auth, bot.requestVoiceVerification);
   router.get("/bot/verify", auth, bot.verifyForm);
   router.post("/bot/verify", auth, bot.verify);
   router.post("/bot/delete", auth, bot.delete);

@@ -18,7 +18,8 @@
     <input name="botId" type="hidden" value="{{ bot.id }}">
     <input name="number" type="hidden" value="{{ bot.number }}">
     <button class="button is-block is-info is-large is-fullwidth">Verify</button>
-    <button class="button is-block is-large is-fullwidth" formaction="/bot/register">New code</button>
+    <button class="button is-block is-large is-fullwidth" formaction="/bot/register" title="Get a code for verification via SMS">Get SMS Code</button>
+    <button class="button is-block is-large is-fullwidth" formaction="/bot/voice-verify" title="Get a code for verification via a voice call">Get Voice Code</button>
 </form>
 
 <a href="/account">Back</a>
