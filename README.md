@@ -180,7 +180,9 @@ GET /bot/<TOKEN>/receive
 * [x] ~~Find a better name for the project~~ (signal-bots is now Sigarillo)
 * [ ] Add tests
 * [ ] Voice verification
+* [ ] Lock number / registration key
 * [ ] Attachments
+* [ ] Prometheus metrics
 * [ ] Robust error handling
 * [ ] Examples of usage (webhook, simple bot, etc)
 * [ ] Clean up UI
@@ -189,9 +191,12 @@ GET /bot/<TOKEN>/receive
 
 [![License GNU AGPL v3.0](https://img.shields.io/badge/License-AGPL%203.0-lightgrey.svg)](https://github.com/abeluck/sigarillo/blob/master/LICENSE.md)
 
-Sigarillo is a free software project licensed under the GNU Affero General Public License v3.0 (GNU AGPLv3) by [Guardian Project](https://guardianproject.info).
+Sigarillo is a free software project licensed under the GNU Affero General
+Public License v3.0 (GNU AGPLv3) by [The Center for Digital
+Resilience](https://digiresilience.org) and [Guardian
+Project](https://guardianproject.info).
 
 [0]: https://signal.org
-[1]:  https://whispersystems.org
+[1]: https://whispersystems.org
 [2]: https://github.com/throneless-tech/libsignal-service-javascript
 [3]: https://github.com/jheretic
