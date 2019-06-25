@@ -31,7 +31,7 @@ const bots = {
       await SignalStore.updateStore(ctx.app.db, bot.id, signal.getStoreData())
       await ctx.render('bot/verify', {
         bot,
-        isProd: config.env.isProd
+        isProd: config.env.isProd,
       })
     } catch (err) {
       log.error(err)
@@ -64,6 +64,7 @@ const bots = {
         await ctx.render('bot/verify', {
           bot,
           error: err.message,
+          isProd: config.env.isProd,
         })
         return
       }
@@ -93,6 +94,7 @@ const bots = {
     if (!bot) throw new NotFoundError()
     await ctx.render('bot/send', {
       bot,
+      isProd: config.env.isProd,
     })
   },
   async getSelf(ctx) {
@@ -137,6 +139,7 @@ const bots = {
             message,
             recipient,
             error: errorMessage,
+            isProd: config.env.isProd,
           })
           break
         case 'json':
