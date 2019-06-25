@@ -1,16 +1,15 @@
-import R from 'ramda'
+import R from "ramda";
 function LocalStorageMemory(state) {
-  this.cache = state
-  this.length = Object.keys(state).length
+  this.cache = state;
+  this.length = Object.keys(state).length;
 }
 
 /**
  * number of stored items.
  */
-LocalStorageMemory.prototype.length = 0
+LocalStorageMemory.prototype.length = 0;
 
 LocalStorageMemory.prototype = {
-
   /**
    * returns item for passed key, or null
    *
@@ -18,7 +17,9 @@ LocalStorageMemory.prototype = {
    *       name of item to be returned
    * @returns {String|null}
    */
-  getItem(key) { return this.cache[key] || null },
+  getItem(key) {
+    return this.cache[key] || null;
+  },
 
   /**
    * sets item for key to passed value, as String
@@ -30,14 +31,14 @@ LocalStorageMemory.prototype = {
    * @returns {undefined}
    */
   setItem(key, value) {
-    if (typeof value === 'undefined') {
-      this.removeItem(key)
+    if (typeof value === "undefined") {
+      this.removeItem(key);
     } else {
-      if (!(R.has(key, this.cache))) {
-        this.length += 1
+      if (!R.has(key, this.cache)) {
+        this.length += 1;
       }
 
-      this.cache[key] = `${value}`
+      this.cache[key] = `${value}`;
     }
   },
 
@@ -50,8 +51,8 @@ LocalStorageMemory.prototype = {
    */
   removeItem(key) {
     if (R.has(key, this.cache)) {
-      delete this.cache[key]
-      this.length -= 1
+      delete this.cache[key];
+      this.length -= 1;
     }
   },
 
@@ -63,7 +64,7 @@ LocalStorageMemory.prototype = {
    * @returns {String|null}
    */
   key(index) {
-    return Object.keys(this.cache)[index] || null
+    return Object.keys(this.cache)[index] || null;
   },
 
   /**
@@ -72,8 +73,8 @@ LocalStorageMemory.prototype = {
    * @returns {undefined}
    */
   clear() {
-    this.cache = {}
-    this.length = 0
-  },
-}
-export default LocalStorageMemory
+    this.cache = {};
+    this.length = 0;
+  }
+};
+export default LocalStorageMemory;

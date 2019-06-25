@@ -1,8 +1,8 @@
 async function index(ctx) {
   if (ctx.isAuthenticated()) {
-    return ctx.redirect('/account')
+    return ctx.redirect("/account");
   }
-  return ctx.redirect('/login')
+  return ctx.redirect("/login");
 }
 
-export default { index }
+export default { index };

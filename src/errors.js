@@ -13,5 +13,5 @@ export {
   UnauthorizedError, // 401
   ForbiddenError, // 403
   NotFoundError, // 404
-  ServerError, // 500
-}
+  ServerError // 500
+};

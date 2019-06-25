@@ -1,41 +1,45 @@
 // noinspection ES6ConvertRequireIntoImport
-const path = require('path')
+const path = require("path");
 // noinspection ES6ConvertRequireIntoImport
-const { ROOT } = require('./base')
+const { ROOT } = require("./base");
 
-const { DB_CLIENT, DB_CONNECTION } = process.env
+const { DB_CLIENT, DB_CONNECTION } = process.env;
 
 const options = {
-  client: DB_CLIENT || 'sqlite3',
-  connection: DB_CONNECTION || { filename: path.join(ROOT, '../data/dev.sqlite3') },
+  client: DB_CLIENT || "sqlite3",
+  connection: DB_CONNECTION || {
+    filename: path.join(ROOT, "../data/dev.sqlite3")
+  },
   migrations: {
-    directory: path.join(ROOT, 'db/migrations'),
-    tableName: 'migrations',
+    directory: path.join(ROOT, "db/migrations"),
+    tableName: "migrations"
   },
   debug: false,
   seeds: {
-    directory: path.join(ROOT, 'db/seeds'),
+    directory: path.join(ROOT, "db/seeds")
   },
-  useNullAsDefault: !DB_CLIENT || DB_CLIENT === 'sqlite3',
-}
+  useNullAsDefault: !DB_CLIENT || DB_CLIENT === "sqlite3"
+};
 
-if (DB_CLIENT && DB_CLIENT !== 'sqlite3') {
+if (DB_CLIENT && DB_CLIENT !== "sqlite3") {
   options.pool = {
     min: 2,
-    max: 10,
-  }
+    max: 10
+  };
 }
 
 module.exports = {
-
   development: Object.assign({}, options),
 
   test: Object.assign({}, options, {
-    connection: DB_CONNECTION || { filename: path.join(ROOT, '../data/test.sqlite3') },
+    connection: DB_CONNECTION || {
+      filename: path.join(ROOT, "../data/test.sqlite3")
+    }
   }),
 
   production: Object.assign({}, options, {
-    connection: DB_CONNECTION || { filename: path.join(ROOT, '../data/prod.sqlite3') },
-  }),
-
-}
+    connection: DB_CONNECTION || {
+      filename: path.join(ROOT, "../data/prod.sqlite3")
+    }
+  })
+};

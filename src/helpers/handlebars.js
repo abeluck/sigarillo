@@ -1,12 +1,12 @@
-import hbs from 'koa-hbs'
+import hbs from "koa-hbs";
 
 function init() {
-  hbs.registerHelper('if_eq', (a, b, opts) => {
+  hbs.registerHelper("if_eq", (a, b, opts) => {
     if (a === b) {
-      return opts.fn(this)
+      return opts.fn(this);
     }
-    return opts.inverse(this)
-  })
+    return opts.inverse(this);
+  });
 }
 
-export default init
+export default init;

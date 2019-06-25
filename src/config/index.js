@@ -1,52 +1,64 @@
 /* eslint-disable global-require */
 // noinspection ES6ConvertRequireIntoImport
-const R = require('ramda')
+const R = require("ramda");
 // noinspection ES6ConvertRequireIntoImport
 const {
-  defaultHost, defaultPort,
-  defaultDataPath, isNotEmpty,
-  ROOT, isProd, isDev, isTest, NODE_ENV, validateEnv, normalizePort,
-} = require('./base')
+  defaultHost,
+  defaultPort,
+  defaultDataPath,
+  isNotEmpty,
+  ROOT,
+  isProd,
+  isDev,
+  isTest,
+  NODE_ENV,
+  validateEnv,
+  normalizePort
+} = require("./base");
 // noinspection ES6ConvertRequireIntoImport
-const knexfile = require('./knexfile')
+const knexfile = require("./knexfile");
 
 function parseSecrets(commaString) {
-  return commaString.split(',')
+  return commaString.split(",");
 }
 
-const isNotChangeMe = R.complement(R.equals('changeme'))
-validateEnv('SECRETS', R.both(isNotEmpty, isNotChangeMe), "The env var 'SECRETS' must be set")
+const isNotChangeMe = R.complement(R.equals("changeme"));
+validateEnv(
+  "SECRETS",
+  R.both(isNotEmpty, isNotChangeMe),
+  "The env var 'SECRETS' must be set"
+);
 // noinspection ES6ConvertRequireIntoImport
 module.exports = {
   site: {
-    name: 'Sigarillo',
-    secrets: parseSecrets(process.env.SECRETS),
+    name: "Sigarillo",
+    secrets: parseSecrets(process.env.SECRETS)
   },
   server: {
     port: normalizePort(defaultPort(process.env.PORT)),
     host: defaultHost(process.env.HOST),
     root: ROOT,
     data: defaultDataPath(process.env.DATA_PATH),
-    logging: require('./logging'),
+    logging: require("./logging")
   },
   env: {
     isDev,
     isProd,
-    isTest,
+    isTest
   },
 
   cors: {
-    origin: '*',
-    exposeHeaders: ['Authorization'],
+    origin: "*",
+    exposeHeaders: ["Authorization"],
     credentials: true,
-    allowMethods: ['GET', 'PUT', 'POST', 'DELETE'],
-    allowHeaders: ['Authorization', 'Content-Type'],
-    keepHeadersOnError: true,
+    allowMethods: ["GET", "PUT", "POST", "DELETE"],
+    allowHeaders: ["Authorization", "Content-Type"],
+    keepHeadersOnError: true
   },
 
   bodyParser: {
-    enableTypes: ['json'],
+    enableTypes: ["json"]
   },
 
-  db: knexfile[NODE_ENV],
-}
+  db: knexfile[NODE_ENV]
+};
