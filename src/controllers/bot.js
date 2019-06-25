@@ -15,19 +15,21 @@ const bots = {
   async registerBot(ctx) {
     const { id: userId } = ctx.state.user
     const { botId, number } = ctx.request.body
+    const regex = /[^\d+]/gm;
+    const sanitizedNumber = number.replace(regex, '').trim()
     let bot
     if (botId) {
       bot = await Bot.findBotForUser(ctx.app.db, userId, botId)
-    } else if (number) {
-      bot = await Bot.createBot(ctx.app.db, userId, number)
+    } else if (sanitizedNumber) {
+      bot = await Bot.createBot(ctx.app.db, userId, sanitizedNumber)
     } else {
       throw new BadRequestError()
     }
 
     try {
       const signalStore = await SignalStore.getOrCreateStore(ctx.app.db, bot.id)
-      const signal = new SignalService(number, signalStore.data)
-      await signal.requestSMSVerification(number)
+      const signal = new SignalService(sanitizedNumber, signalStore.data)
+      await signal.requestSMSVerification(sanitizedNumber)
       await SignalStore.updateStore(ctx.app.db, bot.id, signal.getStoreData())
       await ctx.render('bot/verify', {
         bot,
@@ -55,10 +57,13 @@ const bots = {
     const { botId, code } = ctx.request.body
     const bot = await Bot.findBotForUser(ctx.app.db, ctx.state.user.id, botId)
     if (!bot) throw new NotFoundError()
+    if (!code) throw new BadRequesError()
     const signalStore = await SignalStore.getStore(ctx.app.db, bot.id)
     const signal = new SignalService(bot.number, signalStore.data)
+    const regex = /[^\d]/gm;
+    const sanitizedCode = code.replace(regex, '').trim()
     try {
-      const result = await signal.verifyNumber(bot.number, code)
+      const result = await signal.verifyNumber(bot.number, sanitizedCode)
     } catch (err) {
       if (err.name === 'HTTPError') {
         await ctx.render('bot/verify', {
