@@ -1,6 +1,14 @@
 {
-  "extends": "airbnb-base",
-  "rules": {
-    "semi": "off"
-  }
+    "extends": [
+        "airbnb-base",
+        "prettier"
+    ],
+    "env": {
+        "node": true,
+        "commonjs": true,
+        "es6": true
+    },
+    "rules": {
+        "semi": "off"
+    }
 }
