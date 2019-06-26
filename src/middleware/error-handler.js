@@ -9,7 +9,6 @@ function errorHandler() {
         ctx.throw(404);
       }
     } catch (err) {
-      console.log(err);
       log.error(err.message, { code: err.code, stack: err.stack });
       if (err.status === 401 && !ctx.response.body) {
         ctx.redirect("/login");

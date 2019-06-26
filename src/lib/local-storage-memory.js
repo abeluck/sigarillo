@@ -1,4 +1,5 @@
 import R from "ramda";
+
 function LocalStorageMemory(state) {
   this.cache = state;
   this.length = Object.keys(state).length;

@@ -35,11 +35,12 @@ function time(start) {
 
 function log(print, ctx, start, len, err, event) {
   // get the status code of the response
-  const status = err
-    ? err.isBoom
-      ? err.output.statusCode
-      : err.status || 500
-    : ctx.status || 404;
+  let status;
+  if (err) {
+    status = err.isBoom ? err.output.statusCode : err.status || 500;
+  } else {
+    status = ctx.status || 404;
+  }
 
   // set the color of the status code;
   const s = (status / 100) | 0;
@@ -55,9 +56,15 @@ function log(print, ctx, start, len, err, event) {
     length = bytes(len).toLowerCase();
   }
 
-  const upstream = err ? "xxx" : event === "close" ? "-x-" : "-->";
+  let upstream;
+  if (err) upstream = "xxx";
+  else if (event === "close") upstream = "-x-";
+  else upstream = "-->";
 
-  const directionColor = err ? "red" : event === "close" ? "yellow" : "gray";
+  let directionColor;
+  if (err) directionColor = "red";
+  else if (event === "close") directionColor = "yellow";
+  else directionColor = "gray";
 
   print({
     length,
@@ -104,7 +111,9 @@ function requestLogger(app, logger) {
 
     // log when the response is finished or closed,
     // whichever happens first.
+    // eslint-disable-next-line no-use-before-define
     const onfinish = done.bind(null, "finish");
+    // eslint-disable-next-line no-use-before-define
     const onclose = done.bind(null, "close");
 
     res.once("finish", onfinish);

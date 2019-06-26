@@ -59,14 +59,16 @@
     "debug": "NODE_PATH=src ./node_modules/.bin/nodemon --inspect=172.28.128.4:9229 -L -e js,hbs,scss,css ./src/index.js",
     "start": "NODE_PATH=src ./node_modules/.bin/nodemon -L -e js,hbs,scss,css ./src/index.js",
     "production": "NODE_PATH=src node src/index.js",
-    "lint": "NODE_PATH=src ./node_modules/.bin/eslint .",
+    "lint": "NODE_PATH=src ./node_modules/.bin/eslint . --fix",
+    "fmt": "pretty-quick --staged",
+    "pre:commit": "yarn run lint && yarn run fmt",
     "db:load": "knex seed:run --knexfile src/config/knexfile.js",
     "db:migrate": "knex --knexfile src/config/knexfile.js migrate:latest",
     "db:rollback": "knex --knexfile src/config/knexfile.js migrate:rollback"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "yarn run pre:commit"
     }
   }
 }

@@ -92,27 +92,26 @@ const bots = {
     const { botId, code } = ctx.request.body;
     const bot = await Bot.findBotForUser(ctx.app.db, ctx.state.user.id, botId);
     if (!bot) throw new NotFoundError();
-    if (!code) throw new BadRequesError();
+    if (!code) throw new BadRequestError();
     const signalStore = await SignalStore.getStore(ctx.app.db, bot.id);
     const signal = new SignalService(bot.number, signalStore.data);
     const regex = /[^\d]/gm;
     const sanitizedCode = code.replace(regex, "").trim();
     try {
-      const result = await signal.verifyNumber(bot.number, sanitizedCode);
+      await signal.verifyNumber(bot.number, sanitizedCode);
     } catch (err) {
       if (err.name === "HTTPError") {
-        await ctx.render("bot/verify", {
+        return ctx.render("bot/verify", {
           bot,
           error: err.message,
           isProd: config.env.isProd
         });
-        return;
       }
       throw err;
     }
     await Bot.markVerified(ctx.app.db, bot.id);
     await SignalStore.updateStore(ctx.app.db, bot.id, signal.getStoreData());
-    ctx.redirect("/account");
+    return ctx.redirect("/account");
   },
   async cycle(ctx) {
     const { botId } = ctx.request.body;
@@ -164,7 +163,6 @@ const bots = {
       let result;
       try {
         result = await signal.send(recipient, message);
-        console.log(JSON.stringify(result, null, 2));
       } catch (e) {
         if (e.errors.length > 0) {
           log.error(e.errors[0]);

@@ -17,8 +17,9 @@ const filename = path.join(logDir, "access.log");
 
 const logfmt = winston.format((info, opts) => {
   const props = R.omit(R.defaultTo([], opts.but), info);
-  info.props = logfmter.stringify(props);
-  return info;
+  const infoPatched = info;
+  infoPatched.props = logfmter.stringify(props);
+  return infoPatched;
 });
 
 const logging = {

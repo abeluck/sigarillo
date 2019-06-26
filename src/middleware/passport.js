@@ -4,6 +4,7 @@ import passport from "koa-passport";
 import R from "ramda";
 import User from "../models/user";
 import { NotFoundError } from "../errors";
+import log from "../logger";
 
 function isPassValid(plaintextPass, user) {
   return bcrypt.compareSync(plaintextPass, user.password);
@@ -41,7 +42,7 @@ function middleware(app) {
             done(null, false);
           }
         } catch (err) {
-          console.error(err);
+          log.info("authentication failed for user");
           done(err);
         }
       }

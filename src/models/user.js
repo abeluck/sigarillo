@@ -1,12 +1,12 @@
 import uuid from "uuid/v4";
 import bcrypt from "bcrypt";
-import log from "../logger";
+// import log from "../logger";
 
 const User = {
   async countUsers(db) {
     const result = await db("users").count();
     if (!result || !result.length) return 0;
-    const count = result[0].count;
+    const { count } = result[0];
     return parseInt(count, 10);
   },
   async findUserById(db, id) {
@@ -26,7 +26,7 @@ const User = {
     const userId = uuid();
     await db("users").insert({
       id: userId,
-      email: email,
+      email,
       username: email,
       password: bcrypt.hashSync(password, 10),
       created_at: new Date().toISOString(),

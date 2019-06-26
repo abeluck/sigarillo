@@ -9,6 +9,7 @@
         "es6": true
     },
     "rules": {
-        "semi": "off"
+        "semi": "off",
+        "no-unused-vars": ["error", { "args": "none" }]
     }
 }

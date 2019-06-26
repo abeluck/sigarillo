@@ -1,16 +1,17 @@
+import R from "ramda";
+import zxcvbn from "zxcvbn";
+
 import config from "../config";
 import Bot from "../models/bot";
 import User from "../models/user";
 import log from "../logger";
-import R from "ramda";
-import zxcvbn from "zxcvbn";
 
 async function loginForm(ctx) {
   const userCount = await User.countUsers(ctx.app.db);
   if (userCount === 0) {
-    return await ctx.redirect("/setup");
+    return ctx.redirect("/setup");
   }
-  await ctx.render("login", {});
+  return ctx.render("login", {});
 }
 
 async function logout(ctx) {
@@ -21,7 +22,7 @@ async function logout(ctx) {
 async function index(ctx) {
   const { user } = ctx.state;
   const bots = await Bot.findAllBotsForUser(ctx.app.db, user.id);
-  await ctx.render("account", {
+  return ctx.render("account", {
     title: config.site.name,
     isProd: config.env.isProd,
     user,
@@ -29,11 +30,7 @@ async function index(ctx) {
   });
 }
 
-// from https://emailregex.com/
-const isEmail = input =>
-  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-    input
-  );
+const isEmail = input => /^\S+@\S+$/.test(input);
 const isEmpty = R.either(R.isNil, R.isEmpty);
 
 async function setup(ctx) {
@@ -42,8 +39,7 @@ async function setup(ctx) {
     log.warning("setup page requested, but users already exist.", {
       userCount
     });
-    await ctx.redirect("/login");
-    return;
+    return ctx.redirect("/login");
   }
   const { email, password, passwordConfirm } = ctx.request.body;
   const passwordStrength = zxcvbn(password);
@@ -71,7 +67,6 @@ async function setup(ctx) {
   }
   if (passwordStrength.score < 3) {
     isPasswordStrengthError = true;
-    console.log(passwordStrength);
     passwordStrengthError = passwordStrength.feedback.warning;
     passwordSuggestions = passwordStrength.feedback.suggestions;
     passwordCrackTime =
@@ -87,7 +82,7 @@ async function setup(ctx) {
       isEmailAddressError,
       errorMessage
     });
-    return await ctx.render("setup", {
+    return ctx.render("setup", {
       email,
       errorMessage,
       isEmailAddressError,
@@ -101,8 +96,8 @@ async function setup(ctx) {
     });
   }
   const user = await User.createUser(ctx.app.db, email, password);
-  log.info("user created");
-  ctx.redirect("/login");
+  log.info("user created", { userId: user.id });
+  return ctx.redirect("/login");
 }
 
 async function setupForm(ctx) {
