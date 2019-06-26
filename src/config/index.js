@@ -5,6 +5,8 @@ const R = require("ramda");
 const {
   defaultHost,
   defaultPort,
+  defaultMetricsHost,
+  defaultMetricsPort,
   defaultDataPath,
   isNotEmpty,
   ROOT,
@@ -37,6 +39,8 @@ module.exports = {
   server: {
     port: normalizePort(defaultPort(process.env.PORT)),
     host: defaultHost(process.env.HOST),
+    metricsPort: normalizePort(defaultMetricsPort(process.env.METRICS_PORT)),
+    metricsHost: defaultMetricsHost(process.env.METRICS_HOST),
     root: ROOT,
     data: defaultDataPath(process.env.DATA_PATH),
     logging: require("./logging")

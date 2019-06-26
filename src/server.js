@@ -1,3 +1,4 @@
+import http from "http";
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import session from "koa-session";
@@ -5,6 +6,8 @@ import sass from "koa2-sass";
 import hbs from "koa-hbs";
 import mount from "koa-mount";
 import serve from "koa-static";
+import prometheus from "@echo-health/koa-prometheus-exporter";
+import R from "ramda";
 
 import { version } from "../package.json";
 import config from "./config";
@@ -21,6 +24,9 @@ logger.setLogger(config.server.logging.logger);
 function start() {
   const app = new Koa();
   exports.app = app;
+
+  // register prometheus metric tracking middleware
+  app.use(prometheus.httpMetricMiddleware());
 
   // register handlebar helpers
   helpers();
@@ -92,10 +98,36 @@ function start() {
 
                    version: ${version}
 `);
-  app.logger.info(
-    `${config.site.name} is now listening on port ${config.server.port}`
-  );
-  app.listen(config.server.port);
+  if (
+    R.equals(config.server.port, config.server.metricsPort) &&
+    R.equals(config.server.host, config.server.metricsHost)
+  ) {
+    app.use(prometheus.middleware());
+    app.logger.warn(
+      "WARNING: your /metrics are exposed publicly. specifiy a different METRICS_PORT/HOST to secure your /metrics endpoint"
+    );
+    app.logger.info(
+      `${config.site.name} and metrics is now listening on port ${config.server.host}:${config.server.port}`
+    );
+    app.listen(config.server.port, config.server.host);
+  } else {
+    http
+      .createServer(app.callback())
+      .listen(config.server.port, config.server.host, () => {
+        app.logger.info(
+          `${config.site.name} is now listening on ${config.server.host}:${config.server.port}`
+        );
+      });
+    const metricsApp = new Koa();
+    metricsApp.use(prometheus.middleware());
+    http
+      .createServer(metricsApp.callback())
+      .listen(config.server.metricsPort, config.server.metricsHost, () => {
+        app.logger.info(
+          `Prometheus metrics exposed on ${config.server.metricsHost}:${config.server.metricsPort}`
+        );
+      });
+  }
 }
 
 // noinspection JSUnusedGlobalSymbols

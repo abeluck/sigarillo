@@ -11,6 +11,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 ### Added
 
 - Support for verification of a number via voice call (in addition to SMS)
+- Prometheus metrics exposed on `METRICS_HOST:METRICS_PORT/metrics`, useful for operational monitoring
 
 ### Changed
 

@@ -9,7 +9,9 @@ require("dotenv").config({ path: path.join(ROOT, "..", ".env") });
 
 const defaultEnv = R.defaultTo("development");
 const defaultPort = R.defaultTo(3000);
-const defaultHost = R.defaultTo("localhost");
+const defaultHost = R.defaultTo("0.0.0.0");
+const defaultMetricsHost = R.defaultTo("0.0.0.0");
+const defaultMetricsPort = R.defaultTo(9391);
 const defaultDataPath = R.defaultTo(path.join(ROOT, "..", "data"));
 const defaultLogDir = R.defaultTo(path.join(ROOT, "..", "data", "log"));
 const isEmpty = R.either(R.isNil, R.isEmpty);
@@ -41,6 +43,8 @@ module.exports = {
   defaultEnv,
   defaultHost,
   defaultPort,
+  defaultMetricsHost,
+  defaultMetricsPort,
   defaultDataPath,
   defaultLogDir,
   isNotEmpty,
