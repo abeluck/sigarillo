@@ -6,6 +6,7 @@ import hbs from "koa-hbs";
 import mount from "koa-mount";
 import serve from "koa-static";
 
+import { version } from "../package.json";
 import config from "./config";
 import { requestLogger } from "./middleware/request-logger";
 import db from "./middleware/db";
@@ -81,13 +82,15 @@ function start() {
   routes(app);
 
   // eslint-disable-next-line no-console
-  console.log(`      _                   _ ____        _       
-  ___(_) __ _ _ __   __ _| | __ )  ___ | |_ ___ 
- / __| |/ _\` | '_ \\ / _\` | |  _ \\ / _ \\| __/ __|
- \\__ \\ | (_| | | | | (_| | | |_) | (_) | |_\\__ \\
- |___/_|\\__, |_| |_|\\__,_|_|____/ \\___/ \\__|___/
-        |___/                                   
+  console.log(`
+     _                  _ _ _
+ ___(_) __ _  __ _ _ __(_) | | ___
+/ __| |/ _\` |/ _\` | '__| | | |/ _ \\
+\\__ \\ | (_| | (_| | |  | | | | (_) |
+|___/_|\\__, |\\__,_|_|  |_|_|_|\\___/
+       |___/
 
+                   version: ${version}
 `);
   app.logger.info(
     `${config.site.name} is now listening on port ${config.server.port}`
