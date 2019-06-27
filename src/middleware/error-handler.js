@@ -1,5 +1,3 @@
-import log from "../logger";
-
 function errorHandler() {
   return async (ctx, next) => {
     try {
@@ -9,17 +7,16 @@ function errorHandler() {
         ctx.throw(404);
       }
     } catch (err) {
-      log.error(err.message, { code: err.code, stack: err.stack });
+      const status = ctx.status ? ctx.status : err.status;
+      ctx.status = status;
       if (err.status === 401 && !ctx.response.body) {
         ctx.redirect("/login");
-        ctx.status = 401;
       } else {
-        await ctx.render("error", {
+        ctx.render("error", {
+          status,
           request: ctx.request,
           response: ctx.response,
           stack: err.stack,
-          status: ctx.status,
-          code: err.code,
           message: err.message,
           errorData: JSON.stringify(err)
         });

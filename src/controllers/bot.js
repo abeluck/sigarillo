@@ -1,6 +1,6 @@
 import SignalService from "../lib/signal";
 import Bot from "../models/bot";
-import { BadRequestError, NotFoundError } from "../errors";
+import { ServerError, BadRequestError, NotFoundError } from "../errors";
 import SignalStore from "../models/signalstore";
 import config from "../config";
 import log from "../logger";
@@ -20,10 +20,12 @@ const bots = {
     let bot;
     if (botId) {
       bot = await Bot.findBotForUser(ctx.app.db, userId, botId);
+      if (!bot) throw new BadRequestError(`no bot found with that id`);
     } else if (sanitizedNumber) {
       bot = await Bot.createBot(ctx.app.db, userId, sanitizedNumber);
+      if (!bot) throw new ServerError(`error creating bot`);
     } else {
-      throw new BadRequestError();
+      throw new BadRequestError("invalid number");
     }
 
     try {
@@ -139,7 +141,7 @@ const bots = {
   async getSelf(ctx) {
     const { token } = ctx.params;
     const bot = await Bot.findBotByToken(ctx.app.db, token);
-    if (!bot) throw new NotFoundError();
+    if (!bot) throw new NotFoundError("bot not found with that token");
 
     switch (ctx.accepts("html", "json")) {
       case "html":

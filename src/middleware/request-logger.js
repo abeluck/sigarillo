@@ -56,41 +56,24 @@ function log(print, ctx, start, len, err, event) {
     length = bytes(len).toLowerCase();
   }
 
-  let upstream;
-  if (err) upstream = "xxx";
-  else if (event === "close") upstream = "-x-";
-  else upstream = "-->";
-
-  let directionColor;
-  if (err) directionColor = "red";
-  else if (event === "close") directionColor = "yellow";
-  else directionColor = "gray";
-
   print({
     length,
     status,
-    directionColor,
-    direction: upstream,
     method: ctx.method,
     path: ctx.originalUrl,
     statusColor: color,
-    duration: time(start)
+    duration: time(start),
+    requestId: ctx.state.id
   });
 }
 
 // the koa2 middleware
-function requestLogger(app, logger) {
+function requestLogger(app, logger, isProd) {
   app.requestLogger = logger;
   return async (ctx, next) => {
     const print = (...args) => ctx.app.requestLogger.info("", ...args);
     // request
     const start = Date.now();
-    print({
-      direction: "<--",
-      directionColor: "gray",
-      method: ctx.method,
-      path: ctx.originalUrl
-    });
 
     try {
       await next();
@@ -127,32 +110,13 @@ function requestLogger(app, logger) {
   };
 }
 
-const devPretty = winston.format((info, opts) => {
-  const fields = [];
-  if (info.direction)
-    fields.push(`${chalk.keyword(info.directionColor)(info.direction)}`);
-  if (info.method) fields.push(`${chalk.bold(info.method)}`);
-  if (info.path) fields.push(`${chalk.gray(info.path)}`);
-  if (info.status && info.statusColor) {
-    fields.push(`${chalk[info.statusColor](info.status)}`);
-    // delete info.statusColor
-  }
-  if (info.duration) fields.push(chalk.grey(info.duration));
-  if (info.length) fields.push(chalk.grey(info.length));
+const prodLogFmt = winston.format((info, opts) => {
+  const msgs = [];
+  if (info.method) msgs.push(`${chalk.bold(info.method.toUpperCase())}`);
+  if (info.path) msgs.push(`${chalk.gray(info.path)}`);
 
-  info.message = `  ${fields.join(" ")}`;
+  info.message = `${msgs.join(" ")}`;
   return info;
 });
 
-const fileLogFilter = winston.format((info, opts) => {
-  // filter out the request log, as we only want to log the response
-  if (info.direction === "<--") return false;
-
-  delete info.direction;
-  delete info.statusColor;
-  delete info.directionColor;
-  delete info.message;
-  return info;
-});
-
-export { requestLogger, devPretty, fileLogFilter };
+export { requestLogger, prodLogFmt };

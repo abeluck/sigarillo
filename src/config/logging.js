@@ -1,19 +1,12 @@
 // noinspection ES6ConvertRequireIntoImport
 const winston = require("winston");
 // noinspection ES6ConvertRequireIntoImport
-const path = require("path");
-// noinspection ES6ConvertRequireIntoImport
 const logfmter = require("logfmt");
 // noinspection ES6ConvertRequireIntoImport
 const R = require("ramda");
-// noinspection ES6ConvertRequireIntoImport
-const { defaultLogDir } = require("./base");
 
 // noinspection ES6ConvertRequireIntoImport
-const { devPretty, fileLogFilter } = require("../middleware/request-logger");
-
-const logDir = defaultLogDir(process.env.LOG_DIR);
-const filename = path.join(logDir, "access.log");
+const { prodLogFmt } = require("../middleware/request-logger");
 
 const logfmt = winston.format((info, opts) => {
   const props = R.omit(R.defaultTo([], opts.but), info);
@@ -21,6 +14,9 @@ const logfmt = winston.format((info, opts) => {
   infoPatched.props = logfmter.stringify(props);
   return infoPatched;
 });
+
+const logfmtPrintf = info =>
+  `${info.timestamp} ${info.level} "${info.message}" ${info.props}`;
 
 const logging = {
   logger: winston.createLogger({
@@ -30,18 +26,7 @@ const logging = {
         format: winston.format.combine(
           winston.format.colorize(),
           logfmt({ but: ["level", "message", "timestamp"] }),
-          winston.format.printf(
-            info =>
-              `${info.timestamp} ${info.level} ${info.message} ${info.props}`
-          )
-        )
-      }),
-      new winston.transports.File({
-        filename,
-        level: "info",
-        format: winston.format.combine(
-          logfmt(),
-          winston.format.printf(info => `${info.timestamp} ${info.props}`)
+          winston.format.printf(logfmtPrintf)
         )
       })
     ]
@@ -52,20 +37,10 @@ const logging = {
       new winston.transports.Console({
         format: winston.format.combine(
           winston.format.colorize(),
-          devPretty(),
+          prodLogFmt(),
           winston.format.splat(),
-          winston.format.printf(
-            info => `${info.timestamp} ${info.level} ${info.message}`
-          )
-        )
-      }),
-      new winston.transports.File({
-        filename,
-        level: "info",
-        format: winston.format.combine(
-          fileLogFilter(),
-          logfmt(),
-          winston.format.printf(info => `${info.timestamp} ${info.props}`)
+          logfmt({ but: ["statusColor", "level", "message", "timestamp"] }),
+          winston.format.printf(logfmtPrintf)
         )
       })
     ],

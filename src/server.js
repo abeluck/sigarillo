@@ -14,12 +14,11 @@ import config from "./config";
 import { requestLogger } from "./middleware/request-logger";
 import db from "./middleware/db";
 import passport from "./middleware/passport";
+import requestId from "./middleware/request-id";
 import errorHandler from "./middleware/error-handler";
 import routes from "./routes";
 import helpers from "./helpers/handlebars";
 import logger from "./logger";
-
-logger.setLogger(config.server.logging.logger);
 
 function start() {
   const app = new Koa();
@@ -32,16 +31,21 @@ function start() {
   helpers();
   app.logger = logger;
 
-  app.use(requestLogger(app, config.server.logging.requestLogger));
+  // register requestId middleware
+  app.use(requestId());
+
+  // default error handler, renders nice errors
+  app.use(errorHandler());
+
+  app.use(
+    requestLogger(app, config.server.logging.requestLogger, config.env.isProd)
+  );
 
   // trust proxy
   app.proxy = true;
 
   // app keys for cookie signing ref: https://koajs.com/#app-keys-
   app.keys = config.site.secrets;
-
-  // default error handler, renders nice errors
-  app.use(errorHandler());
 
   // sessions stored in cookies
   app.use(session({}, app));
