@@ -202,12 +202,16 @@ const bots = {
     try {
       messages = await signal.receive();
     } catch (e) {
-      if (e.errors.length > 0) {
+      if (e.errors && e.errors.length > 0) {
         log.error(e.errors[0]);
         errorMessage = e.errors[0].message;
       }
+      if (e.message) {
+        errorMessage = e.message;
+      }
     }
     await SignalStore.updateStore(ctx.app.db, bot.id, signal.getStoreData());
+    ctx.status = errorMessage ? 500 : 200;
 
     switch (ctx.accepts("html", "json")) {
       case "html":
@@ -218,12 +222,15 @@ const bots = {
         });
         break;
       case "json":
-      default:
-        ctx.body = {
+      default: {
+        const result = {
           messages,
           bot
         };
+        if (errorMessage) result.error = errorMessage;
+        ctx.body = result;
         break;
+      }
     }
   }
 };

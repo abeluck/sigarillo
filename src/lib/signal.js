@@ -75,18 +75,23 @@ SignalService.prototype = {
       signalingKey,
       this.protocolStore
     );
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       const messages = [];
       messageReceiver.connect();
       messageReceiver.addEventListener("empty", async () => {
         await messageReceiver.close();
-
+        messageReceiver.shutdown();
         return resolve(messages);
       });
-      messageReceiver.addEventListener("message", ev => {
-        // logger.info("MESSAGE RECEIVED")
+      messageReceiver.addEventListener("error", async () => {
+        await messageReceiver.close();
+        messageReceiver.shutdown();
+        reject(
+          new Error("signal api error encountered with receiving messages")
+        );
+      });
 
-        // console.log(JSON.stringify(ev, null, 2))
+      messageReceiver.addEventListener("message", ev => {
         messages.push({
           source: ev.data.source.toString(),
           timestamp: ev.data.timestamp.toString(),

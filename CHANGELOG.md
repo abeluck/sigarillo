@@ -18,6 +18,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - API is more forgiving when users enter numbers or verification codes with
   spaces or punctuation
 - Staging server warning is consistently and properly applied
+- Better error handling when Signal API returns errors
 
 ### Removed
 
