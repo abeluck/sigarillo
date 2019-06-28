@@ -1,3 +1,5 @@
+{{#> main title="Sigarillo | Send"}}
+{{#*inline "body"}}
 {{#unless isProd}}
     <div class="notification is-info">Only the Signal <strong>staging</strong> server is used.</div>
 {{/unless}}
@@ -26,3 +28,5 @@
 </form>
 
 <a href="/account">Back</a>
+{{/inline}}
+{{/main}}

@@ -1,3 +1,5 @@
+{{#> main title="Sigarillo | Receive"}}
+{{#*inline "body"}}
 {{#if error}}
     <div class="notification is-warning">
         {{error}}
@@ -17,3 +19,6 @@ Body: {{message.message.body}}
 
 
 <a href="/account">Back</a>
+
+{{/inline}}
+{{/main}}

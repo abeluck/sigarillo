@@ -1,9 +1,9 @@
+import path from "path";
 import http from "http";
 import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import session from "koa-session";
 import sass from "koa2-sass";
-import hbs from "koa-hbs";
 import mount from "koa-mount";
 import serve from "koa-static";
 import prometheus from "@echo-health/koa-prometheus-exporter";
@@ -11,6 +11,7 @@ import R from "ramda";
 
 import { version } from "../package.json";
 import config from "./config";
+import hbs from "./koa-hbs";
 import { requestLogger } from "./middleware/request-logger";
 import db from "./middleware/db";
 import passport from "./middleware/passport";
@@ -75,16 +76,13 @@ function start() {
   );
 
   // serve static assets
-  // app.use(serve(`${__dirname}/public`))
   app.use(mount("/assets", serve(`${__dirname}/assets`)));
 
   // register handlebars templates
   app.use(
-    hbs.middleware({
-      viewPath: `${__dirname}/views`,
-      layoutsPath: `${__dirname}/views/layouts`,
-      partialsPath: `${__dirname}/views/partials`,
-      defaultLayout: "main"
+    hbs(path.resolve(__dirname, "views"), {
+      helperDirs: path.resolve(__dirname, "helpers"),
+      partialDirs: path.resolve(__dirname, "views/partials")
     })
   );
 

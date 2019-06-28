@@ -1,4 +1,4 @@
-import hbs from "koa-hbs";
+import hbs from "handlebars";
 
 function init() {
   hbs.registerHelper("if_eq", (a, b, opts) => {
