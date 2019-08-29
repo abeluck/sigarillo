@@ -8,7 +8,7 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/abeluck/sigarillo.git"
+    "url": "git+https://gitlab.com/digiresilience/link/sigarillo.git"
   },
   "dependencies": {
     "@echo-health/koa-prometheus-exporter": "^1.0.4",

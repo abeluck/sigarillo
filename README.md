@@ -189,7 +189,7 @@ GET /bot/<TOKEN>/receive
 
 ## License
 
-[![License GNU AGPL v3.0](https://img.shields.io/badge/License-AGPL%203.0-lightgrey.svg)](https://github.com/abeluck/sigarillo/blob/master/LICENSE.md)
+[![License GNU AGPL v3.0](https://img.shields.io/badge/License-AGPL%203.0-lightgrey.svg)](https://gitlab.com/digiresilience/link/sigarillo/blob/master/LICENSE.md)
 
 Sigarillo is a free software project licensed under the GNU Affero General
 Public License v3.0 (GNU AGPLv3) by [The Center for Digital
