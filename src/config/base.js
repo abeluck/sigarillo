@@ -14,6 +14,7 @@ const defaultMetricsHost = R.defaultTo("0.0.0.0");
 const defaultMetricsPort = R.defaultTo(9391);
 const defaultDataPath = R.defaultTo(path.join(ROOT, "..", "data"));
 const defaultLogDir = R.defaultTo(path.join(ROOT, "..", "data", "log"));
+const defaultFilePath = R.defaultTo(path.join(ROOT, "..", "tmp"));
 const isEmpty = R.either(R.isNil, R.isEmpty);
 const isNotEmpty = R.complement(isEmpty);
 
@@ -47,6 +48,7 @@ module.exports = {
   defaultMetricsPort,
   defaultDataPath,
   defaultLogDir,
+  defaultFilePath,
   isNotEmpty,
   isEmpty,
   ROOT,

@@ -8,6 +8,7 @@ const {
   defaultMetricsHost,
   defaultMetricsPort,
   defaultDataPath,
+  defaultFilePath,
   isNotEmpty,
   ROOT,
   isProd,
@@ -43,6 +44,7 @@ module.exports = {
     metricsHost: defaultMetricsHost(process.env.METRICS_HOST),
     root: ROOT,
     data: defaultDataPath(process.env.DATA_PATH),
+    files: defaultFilePath(process.env.FILE_PATH),
     logging: require("./logging")
   },
   env: {

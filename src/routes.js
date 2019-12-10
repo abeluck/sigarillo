@@ -36,6 +36,7 @@ function init(app) {
   router.get("/bot/:token", bot.getSelf);
   router.post("/bot/:token/send", bot.send);
   router.get("/bot/:token/receive", bot.receive);
+  router.get("/bot/:token/files/:source/:timestamp/:filename", bot.getFile);
 
   app.use(router.routes());
   app.use(router.allowedMethods());
