@@ -13,6 +13,9 @@
 From:  {{message.source}}
 On:  {{message.timestamp}}
 Body: {{message.message.body}}
+{{# each message.attachments as |file|}}
+Attachment: <a href="/bot/{{../../bot.token}}/files/{{message.source}}/{{message.timestamp}}/{{file.file_name}}">{{file.file_name}}</a>
+{{/each}}
 </pre>
 <br/>
 {{/each}}

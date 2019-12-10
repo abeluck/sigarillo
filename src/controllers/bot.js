@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import SignalService from "../lib/signal";
 import Bot from "../models/bot";
 import { ServerError, BadRequestError, NotFoundError } from "../errors";
@@ -33,14 +35,22 @@ const bots = {
         ctx.app.db,
         bot.id
       );
-      const signal = new SignalService(bot.number, signalStore.data);
-      await signal.requestSMSVerification(bot.number);
+      const signal = new SignalService(
+        bot.number,
+        path.join(config.server.files, bot.id),
+        signalStore.data
+      );
+      await signal.start();
+      log.error(`***SignalService: 1***`);
+      await signal.requestSMSVerification();
+      log.error(`***SignalService: 2***`);
       await SignalStore.updateStore(ctx.app.db, bot.id, signal.getStoreData());
       await ctx.render("bot/verify", {
         bot,
         isProd: config.env.isProd
       });
     } catch (err) {
+      log.error("Error requesting SMS verification");
       log.error(err);
       await ctx.render("error", {
         message: "Error requesting SMS verification",
@@ -63,7 +73,13 @@ const bots = {
         ctx.app.db,
         bot.id
       );
-      const signal = new SignalService(bot.number, signalStore.data);
+      const signal = new SignalService(
+        bot.number,
+        path.join(config.server.files, bot.id),
+        signalStore.data
+      );
+      await signal.start();
+      log.error(signal);
       await signal.requestVoiceVerification(bot.number);
       await SignalStore.updateStore(ctx.app.db, bot.id, signal.getStoreData());
       await ctx.render("bot/verify", {
@@ -96,11 +112,16 @@ const bots = {
     if (!bot) throw new NotFoundError();
     if (!code) throw new BadRequestError();
     const signalStore = await SignalStore.getStore(ctx.app.db, bot.id);
-    const signal = new SignalService(bot.number, signalStore.data);
+    const signal = new SignalService(
+      bot.number,
+      path.join(config.server.files, botId),
+      signalStore.data
+    );
+    await signal.start();
     const regex = /[^\d]/gm;
     const sanitizedCode = code.replace(regex, "").trim();
     try {
-      await signal.verifyNumber(bot.number, sanitizedCode);
+      await signal.verifyNumber(sanitizedCode);
     } catch (err) {
       if (err.name === "HTTPError") {
         return ctx.render("bot/verify", {
@@ -160,7 +181,12 @@ const bots = {
       const bot = await Bot.findBotByToken(tx, token);
       if (!bot) throw new NotFoundError();
       const signalStore = await SignalStore.getStore(tx, bot.id);
-      const signal = new SignalService(bot.number, signalStore.data);
+      const signal = new SignalService(
+        bot.number,
+        path.join(config.server.files, token),
+        signalStore.data
+      );
+      await signal.start();
       let errorMessage;
       let result;
       try {
@@ -196,7 +222,12 @@ const bots = {
     const bot = await Bot.findBotByToken(ctx.app.db, token);
     if (!bot) throw new NotFoundError();
     const signalStore = await SignalStore.getStore(ctx.app.db, bot.id);
-    const signal = new SignalService(bot.number, signalStore.data);
+    const signal = new SignalService(
+      bot.number,
+      path.join(config.server.files, token),
+      signalStore.data
+    );
+    await signal.start();
     let errorMessage;
     let messages = [];
     try {
@@ -231,6 +262,23 @@ const bots = {
         ctx.body = result;
         break;
       }
+    }
+  },
+  async getFile(ctx) {
+    const { token, source, timestamp, filename } = ctx.params;
+    const bot = await Bot.findBotByToken(ctx.app.db, token);
+    if (!bot) throw new NotFoundError();
+    const filePath = path.join(
+      config.server.files,
+      token,
+      source,
+      timestamp,
+      filename
+    );
+    const stat = await fs.promises.stat(filePath);
+    if (stat.isFile()) {
+      ctx.type = path.extname(filePath);
+      ctx.body = fs.createReadStream(filePath);
     }
   }
 };
