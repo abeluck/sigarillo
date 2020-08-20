@@ -13,7 +13,7 @@
   "dependencies": {
     "@echo-health/koa-prometheus-exporter": "^1.0.4",
     "@throneless/libsignal-service": "^1.1.1",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "bulma": "^0.7.5",
     "bytebuffer": "5.0.1",
     "bytes": "^3.1.0",
