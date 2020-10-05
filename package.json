@@ -22,7 +22,7 @@
     "esm": "^3.2.25",
     "handlebars": "^4.5.3",
     "humanize-number": "^0.0.2",
-    "knex": "^0.17.6",
+    "knex": "^0.19.5",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
     "koa-mount": "^4.0.0",
