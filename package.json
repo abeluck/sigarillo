@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://gitlab.com/digiresilience/link/sigarillo.git"
   },
+  "engines": {
+    "node": ">=11.0"
+  },
   "dependencies": {
     "@echo-health/koa-prometheus-exporter": "^1.0.4",
     "@throneless/libsignal-service": "^1.2.0",
