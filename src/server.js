@@ -20,6 +20,7 @@ import errorHandler from "./middleware/error-handler";
 import routes from "./routes";
 import helpers from "./helpers/handlebars";
 import logger from "./logger";
+import factoryWrapper from "./middleware/botFactory";
 
 function start() {
   const app = new Koa();
@@ -85,6 +86,10 @@ function start() {
       partialDirs: path.resolve(__dirname, "views/partials")
     })
   );
+
+  // Initialize botfactory
+  const factoryMiddleware = factoryWrapper(app.db, config.server.files);
+  app.use(factoryMiddleware);
 
   // configure routes
   routes(app);

@@ -1,4 +1,4 @@
-import fsPromises from "fs/promises";
+import fs from "fs";
 import path from "path";
 import SignalApi from "@throneless/libsignal-service";
 import { ServerError } from "../errors";
@@ -9,19 +9,35 @@ export default class SignalService {
   constructor(db, filePath, botData, storeData) {
     this.db = db;
     this.filePath = filePath;
-    this.bot = botData;
+    this.botData = botData;
+    this.id = botData.id;
+    this.number = botData.number;
     this.storage = new SignalProtocolStore(storeData);
     this.protocolStore = new SignalApi.ProtocolStore(this.storage);
     this.messages = [];
   }
 
   async start() {
+    log.debug("Starting SignalService");
     try {
       await this.protocolStore.load();
-      let password = this.protocolStore.getPassword();
+    } catch (err) {
+      log.error("Failed to load protocolStore");
+      throw err;
+    }
+  }
+
+  getStoreData() {
+    return this.storage.getStoreData();
+  }
+
+  async accountConnect() {
+    log.debug("Initializing AccountManager");
+    try {
+      let password = await this.protocolStore.getPassword();
       if (!password) {
         password = SignalApi.KeyHelper.generatePassword();
-        this.protocolStore.setPassword(password);
+        await this.protocolStore.setPassword(password);
       }
 
       this.accountManager = new SignalApi.AccountManager(
@@ -36,19 +52,24 @@ export default class SignalService {
     }
   }
 
-  getStoreData() {
-    return this.storage.getStoreData();
-  }
-
   async requestSMSVerification() {
+    if (!this.accountManager) {
+      await this.accountConnect();
+    }
     return this.accountManager.requestSMSVerification();
   }
 
   async requestVoiceVerification() {
+    if (!this.accountManager) {
+      await this.accountConnect();
+    }
     return this.accountManager.requestVoiceVerification();
   }
 
   async verifyNumber(code) {
+    if (!this.accountManager) {
+      await this.accountConnect();
+    }
     return this.accountManager.registerSingleDevice(code);
   }
 
@@ -64,7 +85,9 @@ export default class SignalService {
   }
 
   async send(recipient, message) {
+    log.debug(`Sending message to ${recipient}`);
     if (!this.messageSender) {
+      log.debug("MessageSender not instantiated, starting it up");
       await this.senderConnect();
     }
     const now = Date.now();
@@ -93,16 +116,16 @@ export default class SignalService {
 
   async receiverConnect() {
     log.debug("Connecting incoming message service");
-    const messageReceiver = new SignalApi.MessageReceiver(this.protocolStore);
-    await messageReceiver.connect();
-    messageReceiver.addEventListener("error", async () => {
-      await messageReceiver.close();
-      messageReceiver.shutdown();
+    this.messageReceiver = new SignalApi.MessageReceiver(this.protocolStore);
+    await this.messageReceiver.connect();
+    this.messageReceiver.addEventListener("error", async () => {
+      await this.messageReceiver.close();
+      this.messageReceiver.shutdown();
       log.error("Signal error encountered while receiving messages");
       throw new ServerError();
     });
 
-    messageReceiver.addEventListener("message", ev => {
+    this.messageReceiver.addEventListener("message", ev => {
       if (this.filePath) {
         let savePath = path.normalize(this.filePath);
         savePath = path.join(
@@ -112,7 +135,7 @@ export default class SignalService {
         );
         this.messages.push(
           Promise.resolve(
-            fsPromises
+            fs.promises
               .mkdir(savePath, { recursive: true })
               .then(() => {
                 const promises = [];
@@ -120,7 +143,7 @@ export default class SignalService {
                 ev.data.message.attachments.map(attachment => {
                   promises.push(
                     // eslint-disable-next-line promise/no-nesting
-                    messageReceiver
+                    this.messageReceiver
                       .handleAttachment(attachment)
                       .then(attachmentPointer => {
                         // eslint-disable-next-line promise/no-nesting
@@ -171,11 +194,17 @@ export default class SignalService {
   }
 
   async receive() {
+    log.debug("Receiving messages");
     if (!this.messageReceiver) {
+      log.debug("MessageReceiver not instantiated, starting it");
       await this.receiverConnect();
+      // wait for a couple seconds for new messages to arrive
+      await new Promise(resolve => setTimeout(resolve, 2000));
     }
+    log.debug("Messages in queue: ", this.messages.length);
     if (this.messages.length > 0) {
-      const received = this.messages.splice(0, this.messages.length - 1);
+      log.debug("Returning messages");
+      const received = this.messages.splice(0, this.messages.length);
       return Promise.all(received);
     }
     log.debug("No messages");
@@ -184,10 +213,14 @@ export default class SignalService {
 
   async stop() {
     // stop receiver
-    await this.messageReceiver.close();
-    this.messageReceiver.shutdown();
+    if (this.messageReceiver) {
+      await this.messageReceiver.close();
+      this.messageReceiver.shutdown();
+    }
     // stop sender
-    await this.messageSender.close();
-    this.messageSender.shutdown();
+    if (this.messageSender) {
+      // await this.messageSender.close();
+      // this.messageSender.shutdown();
+    }
   }
 }

@@ -185,7 +185,8 @@ class SignalProtocolStore {
   }
 
   getUnprocessedCount() {
-    return Object.keys(this.store["unprocessed"]).length;
+    const unprocessed = this._getAll("unprocessed");
+    return Object.keys(unprocessed).length;
   }
 
   getUnprocessedById(id) {

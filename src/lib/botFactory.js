@@ -13,20 +13,25 @@ export default class BotFactory {
     this.bots = new Map();
   }
 
-  async find(botId, userId, load = true) {
+  async findByUser(userId, botId, load = true) {
     let bot = this.bots.get(botId);
     if (bot) {
       log.debug("Found loaded bot.");
       return bot;
     }
     log.debug("No loaded bot found, searching database");
-    const botData = BotModel.findBotForUser(this.db, userId, botId);
-    const storeData = await SignalStore.getOrCreateStore(this.db, botData.id);
+    const botData = await BotModel.findBotForUser(this.db, userId, botId);
+    const { data: storeData } = await SignalStore.getOrCreateStore(
+      this.db,
+      botData.id
+    );
     const filePath = path.join(config.server.files, botData.id);
+    log.debug("Retrieved bot data:", botData);
     if (botData && load) {
       bot = new SignalService(this.db, filePath, botData, storeData);
       if (bot) {
         log.debug("Found and loaded existing bot");
+        await bot.start();
         this.bots.set(botData.id, bot);
         return bot;
       }
@@ -41,35 +46,77 @@ export default class BotFactory {
     }
   }
 
-  async create(userId, number) {
-    const botData = BotModel.createBot(this.db, userId, number);
-    const storeData = await SignalStore.getOrCreateStore(this.db, botData.id);
-    const filePath = path.join(config.server.files, botData.id);
-    const bot = new SignalService(this.db, filePath, botData, storeData);
-    if (bot) {
-      this.bots.set(botData.id, bot);
+  async findByToken(token) {
+    log.debug("No loaded bot found, searching database");
+    const botData = await BotModel.findBotByToken(this.db, token);
+    if (botData) {
+      let bot = this.bots.get(botData.id);
+      if (bot) {
+        log.debug("Found loaded bot.");
+        return bot;
+      }
+      const { data: storeData } = await SignalStore.getOrCreateStore(
+        this.db,
+        botData.id
+      );
+      const filePath = path.join(config.server.files, botData.id);
+      bot = new SignalService(this.db, filePath, botData, storeData);
+      if (bot) {
+        log.debug("Found and loaded existing bot");
+        await bot.start();
+        this.bots.set(botData.id, bot);
+        return bot;
+      }
+      log.debug("Failed to load bot from database");
+      throw new ServerError();
     } else {
-      log.error("Error creating bot");
+      log.debug("No existing bot found");
+      throw new NotFoundError();
+    }
+  }
+
+  async create(userId, number) {
+    log.debug(`Creating a new bot for user ${userId} with number ${number}`);
+    try {
+      const botData = await BotModel.createBot(this.db, userId, number);
+      const { data: storeData } = await SignalStore.getOrCreateStore(
+        this.db,
+        botData.id
+      );
+      const filePath = path.join(config.server.files, botData.id);
+      const bot = new SignalService(this.db, filePath, botData, storeData);
+      if (bot) {
+        await bot.start();
+        this.bots.set(botData.id, bot);
+        return bot;
+      }
+      throw new Error("Failed to create SignalService");
+    } catch (err) {
+      log.error(
+        "Error creating bot: ",
+        err.message ? err.message : "No error message"
+      );
       throw new ServerError();
     }
   }
 
-  async destroy(botId, userId) {
+  async destroy(userId, botId) {
+    log.debug(`Destroying bot with id ${botId} for user ${userId}`);
     try {
-      const bot = await this.find(botId, userId, false);
+      const bot = await this.findByUser(userId, botId, false);
       if (bot) {
         if (bot instanceof SignalService) {
           await bot.stop();
+          if (this.bots.delete(botId)) {
+            log.debug(`Deleted bot with id ${botId}`);
+          }
         }
-        if (this.bots.delete(botId)) {
-          log.debug(`Deleted bot with id ${botId}`);
-        } else {
-          log.debug(`Failed to delete bot with id ${botId}`);
-          throw new ServerError();
-        }
+        await SignalStore.deleteStore(this.db, botId);
+        await BotModel.deleteBot(this.db, botId);
       }
+      return;
     } catch (err) {
-      log.error("Failed to find bot to destroy");
+      log.error(`Failed to delete bot ${botId}: `, err);
       throw err;
     }
   }
