@@ -77,7 +77,6 @@ const bots = {
     if (!botId) throw new NotFoundError();
     const { id: userId } = ctx.state.user;
     const bot = await ctx.state.botFactory.findByUser(userId, botId);
-    log.debug("***botData***:", bot);
     if (!bot) throw new NotFoundError(`Bot ${botId} not found`);
     await ctx.render("bot/verify", {
       bot: bot.botData
@@ -85,11 +84,7 @@ const bots = {
   },
   async verify(ctx) {
     const { botId, code } = ctx.request.body;
-    log.debug("*** botId ***:", botId);
-    log.debug("*** code ***:", code);
-    log.debug("*** userId ***:", ctx.state.user.id);
     const bot = await ctx.state.botFactory.findByUser(ctx.state.user.id, botId);
-    log.debug("*** bot ***:", bot);
     if (!bot) throw new NotFoundError();
     if (!code) throw new BadRequestError();
     const regex = /[^\d]/gm;
@@ -145,7 +140,7 @@ const bots = {
         break;
       case "json":
       default:
-        ctx.body = bot;
+        ctx.body = bot.botData;
         break;
     }
   },
@@ -215,7 +210,7 @@ const bots = {
       default: {
         const result = {
           messages,
-          bot
+          bot: bot.botData
         };
         if (errorMessage) result.error = errorMessage;
         ctx.body = result;
