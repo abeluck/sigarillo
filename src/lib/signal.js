@@ -166,6 +166,13 @@ export default class SignalService {
                   const { message } = ev.data;
                   // koajs can't parse AttachmentPointers for JSON output
                   message.attachments = "";
+                  if (
+                    !message.body &&
+                    Array.isArray(files) &&
+                    files.length > 0
+                  ) {
+                    message.body = "Attached"; // Zammad can't handle an empty message body
+                  }
                   return {
                     source: ev.data.source.toString(),
                     timestamp: ev.data.timestamp.toString(),
