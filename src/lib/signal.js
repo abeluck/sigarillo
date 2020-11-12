@@ -119,10 +119,8 @@ export default class SignalService {
     this.messageReceiver = new SignalApi.MessageReceiver(this.protocolStore);
     await this.messageReceiver.connect();
     this.messageReceiver.addEventListener("error", async () => {
-      await this.messageReceiver.close();
-      this.messageReceiver.shutdown();
       log.error("Signal error encountered while receiving messages");
-      throw new ServerError();
+      await this.receiverStop();
     });
 
     this.messageReceiver.addEventListener("message", ev => {
@@ -176,7 +174,10 @@ export default class SignalService {
                   };
                 });
               })
-              .catch(err => log.error("Error receiving message: ", err))
+              .catch(async err => {
+                log.error("Error receiving message: ", err);
+                await this.receiverStop();
+              })
           )
         );
       } else {
@@ -193,11 +194,28 @@ export default class SignalService {
     });
   }
 
+  async receiverStop() {
+    if (this.messageReceiver !== undefined) {
+      log.error("Shutting down MessageReceiver.");
+      await this.messageReceiver.close();
+      this.messageReceiver.shutdown();
+      delete this.messageReceiver;
+    } else {
+      log.error("Trying to shutdown MessageReceiver but it is already down");
+    }
+  }
+
   async receive() {
     log.debug("Receiving messages");
     if (!this.messageReceiver) {
       log.debug("MessageReceiver not instantiated, starting it");
-      await this.receiverConnect();
+      try {
+        await this.receiverConnect();
+      } catch (err) {
+        log.error("Failed to start receiver:", err);
+        await this.receiverStop();
+        return;
+      }
       // wait for a couple seconds for new messages to arrive
       await new Promise(resolve => setTimeout(resolve, 2000));
     }
@@ -213,10 +231,7 @@ export default class SignalService {
 
   async stop() {
     // stop receiver
-    if (this.messageReceiver) {
-      await this.messageReceiver.close();
-      this.messageReceiver.shutdown();
-    }
+    await this.receiverStop();
     // stop sender
     if (this.messageSender) {
       // await this.messageSender.close();
