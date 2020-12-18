@@ -1,70 +1,52 @@
-# Image and binary can be overidden with env vars.
-DOCKER_IMAGE ?= digiresilience/sigarillo
-DOCKER_ARGS ?= --disable-content-trust=false
+BUILD_DATE   ?=$(shell date -u +”%Y-%m-%dT%H:%M:%SZ”)
+DOCKER_ARGS  ?=
+DOCKER_NS    ?= registry.gitlab.com/digiresilience/link/sigarillo
+DOCKER_TAG   ?= ${SIGARILLO_TAG}
+DOCKER_BUILD := docker build ${DOCKER_ARGS} --build-arg BUILD_DATE=${BUILD_DATE} #--disable-content-trust=false
+DOCKER_BUILD_FRESH := ${DOCKER_BUILD} --pull --no-cache
+DOCKER_BUILD_ARGS := --build-arg VCS_REF=${CI_COMMIT_SHORT_SHA}
+DOCKER_PUSH  := docker push #--disable-content-trust=false
+DOCKER_BUILD_TAG := ${DOCKER_NS}:${DOCKER_TAG}
 
-# Get the latest commit.
-GIT_COMMIT = $(strip $(shell git rev-parse --short HEAD))
+.PHONY: build build-fresh push build-push build-fresh-push clean env
 
-# Get the version number from the code
-PACKAGE_VERSION=$(shell sed -nE 's/^\s*"version": "(.*?)",$$/\1/p' package.json)
+env:
+	@echo
+	@echo
+	@echo Build Environment
+	@echo ---------------------------
+	@echo "DOCKER_NS=${DOCKER_NS}"
+	@echo "DOCKER_TAG=${DOCKER_TAG}"
+	@echo "DOCKER_TAG_NEW=${DOCKER_TAG_NEW}"
+	@echo "DOCKER_ARGS=${DOCKER_ARGS}"
+	@echo ---------------------------
+	@echo
+	@echo
 
-# Find out if the working directory is clean
-GIT_NOT_CLEAN_CHECK = $(shell git status --porcelain)
-ifneq (x$(GIT_NOT_CLEAN_CHECK), x)
-DOCKER_TAG_SUFFIX = -dirty
-endif
+build: .npmrc
+	${DOCKER_BUILD} ${DOCKER_BUILD_ARGS} -t ${DOCKER_BUILD_TAG} ${PWD}
 
-# If we're releasing to Docker Hub, and we're going to mark it with the latest tag, it should exactly match a version release
-ifeq ($(MAKECMDGOALS),release)
-# Use the version number as the release tag.
-DOCKER_TAG = $(PACKAGE_VERSION)
+build-fresh: .npmrc
+	${DOCKER_BUILD_FRESH} ${DOCKER_BUILD_ARGS} -t ${DOCKER_BUILD_TAG} ${PWD}
 
-ifndef PACKAGE_VERSION
-$(error Could not read version from package.json)
-endif
+push:
+	${DOCKER_PUSH} ${DOCKER_BUILD_TAG}
 
-# See what commit is tagged to match the version
-VERSION_COMMIT = $(strip $(shell git rev-list $(PACKAGE_VERSION) -n 1 | cut -c1-7))
-ifneq ($(VERSION_COMMIT), $(GIT_COMMIT))
-$(error echo You are trying to push a build based on commit $(GIT_COMMIT) but the tagged release version is $(VERSION_COMMIT))
-endif
+build-push: build push
+build-fresh-push: build-fresh push
 
-# Don't push to Docker Hub if this isn't a clean repo
-ifneq (x$(GIT_NOT_CLEAN_CHECK), x)
-$(error echo You are trying to release a build based on a dirty repo)
-endif
+add-tag:
+	docker pull ${DOCKER_NS}:${DOCKER_TAG}
+	docker tag ${DOCKER_NS}:${DOCKER_TAG} ${DOCKER_NS}:${DOCKER_TAG_NEW}
+	docker push ${DOCKER_NS}:${DOCKER_TAG_NEW}
 
-else
-# Add the commit ref for development builds. Mark as dirty if the working directory isn't clean
-DOCKER_TAG = $(PACKAGE_VERSION)-$(GIT_COMMIT)$(DOCKER_TAG_SUFFIX)
-endif
+test: .npmrc
+	npm install
+	npm run build
+	npm run ci:test
 
-SOURCES := $(shell find . -name '*.go')
-
-default: build
-
-# Build Docker image
-build: docker_build output
-
-# Build and push Docker image
-release: docker_build docker_push output
-
-
-docker_build:
-	docker build  ${DOCKER_ARGS} \
-  --build-arg BUILD_DATE=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ") \
-  --build-arg VERSION=$(PACKAGE_VERSION) \
-  --build-arg VCS_URL=$(shell git config --get remote.origin.url) \
-  --build-arg VCS_REF=$(GIT_COMMIT) \
-  -t $(DOCKER_IMAGE):$(DOCKER_TAG) .
-
-docker_push:
-	# Tag image as latest
-	docker tag $(DOCKER_IMAGE):$(DOCKER_TAG) $(DOCKER_IMAGE):latest
-
-	# Push to DockerHub
-	docker push ${DOCKER_ARGS} $(DOCKER_IMAGE):$(DOCKER_TAG)
-	docker push ${DOCKER_ARGS} $(DOCKER_IMAGE):latest
-
-output:
-	@echo Docker Image: $(DOCKER_IMAGE):$(DOCKER_TAG)
+.npmrc:
+	echo '@digiresilience:registry=https://gitlab.com/api/v4/packages/npm/' > .npmrc
+	echo '@guardianproject-ops:registry=https://gitlab.com/api/v4/packages/npm/' >> .npmrc
+	echo '//gitlab.com/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}' >> .npmrc
+	echo '//gitlab.com/api/v4/projects/:_authToken=${CI_JOB_TOKEN}' >> .npmrc

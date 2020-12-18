@@ -1,0 +1,35 @@
+---
+image: docker:git
+services:
+  - docker:dind
+
+stages:
+  - build
+  - release
+  - trigger
+
+before_script:
+  - apk add --update make curl unzip findutils
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - export CI_JOB_TIMESTAMP=$(date --utc +"%Y-%m-%d")
+
+
+build:
+  stage: build
+  variables:
+    DOCKER_NS: $CI_REGISTRY_IMAGE
+    DOCKER_TAG: ${CI_COMMIT_SHORT_SHA}
+  script:
+    - make build-push
+
+release:
+  stage: release
+  variables:
+    DOCKER_NS: $CI_REGISTRY_IMAGE
+    DOCKER_TAG: ${CI_COMMIT_SHORT_SHA}
+    DOCKER_TAG_NEW: ${CI_COMMIT_REF_NAME}
+  only:
+    - master
+    - develop
+  script:
+    - make add-tag
