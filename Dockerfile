@@ -28,7 +28,7 @@ ENV SIGARILLO_READY_FILE ${SIGARILLO_DIR}/sigarillo.ready
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y --no-install-recommends \
-    dumb-init
+    dumb-init postgresql-client
 RUN mkdir -p ${SIGARILLO_DIR}
 RUN chown -R node:node ${SIGARILLO_DIR}/
 RUN mkdir -p /var/lib/sigarillo
