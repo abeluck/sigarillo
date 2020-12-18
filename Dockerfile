@@ -1,4 +1,4 @@
-FROM node:10-stretch  as builder
+FROM node:12-buster  as builder
 LABEL maintainer="Abel Luck <abel@guardianproject.info>"
 ARG SIGARILLO_DIR=/opt/sigarillo
 RUN mkdir -p ${SIGARILLO_DIR}/
@@ -8,7 +8,7 @@ USER node
 WORKDIR ${SIGARILLO_DIR}
 RUN yarn --production
 
-FROM node:10-stretch
+FROM node:12-buster
 LABEL maintainer="Abel Luck <abel@guardianproject.info>"
 ARG BUILD_DATE
 ARG VCS_REF
