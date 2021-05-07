@@ -592,10 +592,10 @@
     tiny-worker "^2.1.1"
     webworkify "^1.4.0"
 
-"@throneless/libsignal-service@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@throneless/libsignal-service/-/libsignal-service-1.2.0.tgz#3dfd059bddfdecc954ec8ec1c315d9dd9564cee8"
-  integrity sha512-VCj3NPB/rfco3xCMZ2U0Y7/CeBcjpl0vf1jUBmz6Lc5FGbVyFiztleTkVL1vXbzJusOoMv45adaFnCCpvx5v5A==
+"@throneless/libsignal-service@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@throneless/libsignal-service/-/libsignal-service-1.2.1.tgz#a19e4db5e65895f1a01a89a0dabf2827f1f5b7a4"
+  integrity sha512-7tv1Qoy+iIzZYn+dMdhkIgttjARUzhk9hhPEv8TJ2jXFBnvsPLSq1De+k2QL+sWrRNtx9+/WfYtsXbO7MddFkQ==
   dependencies:
     "@sindresorhus/is" "^0.12.0"
     "@throneless/libsignal-protocol" "^0.1.7"
@@ -3230,10 +3230,10 @@ growly@^1.3.0:
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha1-8QdIy+dq+WS3yWyTxrzCivEgwIE=
 
-handlebars@^4.5.3:
-  version "4.7.6"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.6.tgz#d4c05c1baf90e9945f77aa68a7a219aa4a7df74e"
-  integrity sha512-1f2BACcBfiwAfStCKZNrUCgqNZkGsAT7UM3kkYtXuLo0KnaVfjKOyf7PRzB6++aK9STyT1Pd2ZCPe3EGOXleXA==
+handlebars@^4.7.7:
+  version "4.7.7"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.7.tgz#9ce33416aad02dbd6c8fafa8240d5d98004945a1"
+  integrity sha512-aAcXm5OAfE/8IXkcZvCepKU3VzW1/39Fb5ZuqMtgI/hT8X2YgoMvBY5dLhq/cpOvw7Lk1nK/UF71aLG/ZnVYRA==
   dependencies:
     minimist "^1.2.5"
     neo-async "^2.6.0"
