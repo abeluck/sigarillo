@@ -592,10 +592,10 @@
     tiny-worker "^2.1.1"
     webworkify "^1.4.0"
 
-"@throneless/libsignal-service@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@throneless/libsignal-service/-/libsignal-service-1.2.0.tgz#3dfd059bddfdecc954ec8ec1c315d9dd9564cee8"
-  integrity sha512-VCj3NPB/rfco3xCMZ2U0Y7/CeBcjpl0vf1jUBmz6Lc5FGbVyFiztleTkVL1vXbzJusOoMv45adaFnCCpvx5v5A==
+"@throneless/libsignal-service@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@throneless/libsignal-service/-/libsignal-service-1.2.1.tgz#a19e4db5e65895f1a01a89a0dabf2827f1f5b7a4"
+  integrity sha512-7tv1Qoy+iIzZYn+dMdhkIgttjARUzhk9hhPEv8TJ2jXFBnvsPLSq1De+k2QL+sWrRNtx9+/WfYtsXbO7MddFkQ==
   dependencies:
     "@sindresorhus/is" "^0.12.0"
     "@throneless/libsignal-protocol" "^0.1.7"
@@ -3328,9 +3328,9 @@ homedir-polyfill@^1.0.1:
     parse-passwd "^1.0.0"
 
 hosted-git-info@^2.1.4:
-  version "2.8.8"
-  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.8.tgz#7539bd4bc1e0e0a895815a2e0262420b12858488"
-  integrity sha512-f/wzC2QaWBs7t9IYqB4T3sR1xviIViXJRJTWBlx2Gf3g0Xi5vI7Yy4koXQ1c9OYDGHN9sBy1DQ2AB8fqZBWhUg==
+  version "2.8.9"
+  resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.8.9.tgz#dffc0bf9a21c02209090f2aa69429e1414daf3f9"
+  integrity sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==
 
 html-encoding-sniffer@^2.0.1:
   version "2.0.1"
