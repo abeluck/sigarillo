@@ -592,10 +592,10 @@
     tiny-worker "^2.1.1"
     webworkify "^1.4.0"
 
-"@throneless/libsignal-service@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@throneless/libsignal-service/-/libsignal-service-1.2.0.tgz#3dfd059bddfdecc954ec8ec1c315d9dd9564cee8"
-  integrity sha512-VCj3NPB/rfco3xCMZ2U0Y7/CeBcjpl0vf1jUBmz6Lc5FGbVyFiztleTkVL1vXbzJusOoMv45adaFnCCpvx5v5A==
+"@throneless/libsignal-service@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@throneless/libsignal-service/-/libsignal-service-1.2.1.tgz#a19e4db5e65895f1a01a89a0dabf2827f1f5b7a4"
+  integrity sha512-7tv1Qoy+iIzZYn+dMdhkIgttjARUzhk9hhPEv8TJ2jXFBnvsPLSq1De+k2QL+sWrRNtx9+/WfYtsXbO7MddFkQ==
   dependencies:
     "@sindresorhus/is" "^0.12.0"
     "@throneless/libsignal-protocol" "^0.1.7"
@@ -7954,9 +7954,9 @@ write@1.0.3:
     mkdirp "^0.5.1"
 
 ws@^7.2.3:
-  version "7.3.1"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-7.3.1.tgz#d0547bf67f7ce4f12a72dfe31262c68d7dc551c8"
-  integrity sha512-D3RuNkynyHmEJIpD2qrgVkc9DQ23OrN/moAwZX4L8DfvszsJxpjQuUq3LMx6HoYji9fbIOBY18XWBsAux1ZZUA==
+  version "7.4.6"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-7.4.6.tgz#5654ca8ecdeee47c33a9a4bf6d28e2be2980377c"
+  integrity sha512-YmhHDO4MzaDLB+M9ym/mDA5z0naX8j7SIlT8f8z+I0VtzsRbekxEutHSme7NPS2qE8StCYQNUnfWdXta/Yu85A==
 
 xdg-basedir@^3.0.0:
   version "3.0.0"
