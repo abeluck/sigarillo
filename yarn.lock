@@ -592,10 +592,10 @@
     tiny-worker "^2.1.1"
     webworkify "^1.4.0"
 
-"@throneless/libsignal-service@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@throneless/libsignal-service/-/libsignal-service-1.2.0.tgz#3dfd059bddfdecc954ec8ec1c315d9dd9564cee8"
-  integrity sha512-VCj3NPB/rfco3xCMZ2U0Y7/CeBcjpl0vf1jUBmz6Lc5FGbVyFiztleTkVL1vXbzJusOoMv45adaFnCCpvx5v5A==
+"@throneless/libsignal-service@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@throneless/libsignal-service/-/libsignal-service-1.2.1.tgz#a19e4db5e65895f1a01a89a0dabf2827f1f5b7a4"
+  integrity sha512-7tv1Qoy+iIzZYn+dMdhkIgttjARUzhk9hhPEv8TJ2jXFBnvsPLSq1De+k2QL+sWrRNtx9+/WfYtsXbO7MddFkQ==
   dependencies:
     "@sindresorhus/is" "^0.12.0"
     "@throneless/libsignal-protocol" "^0.1.7"
@@ -5862,9 +5862,9 @@ path-key@^3.0.0, path-key@^3.1.0:
   integrity sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==
 
 path-parse@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
-  integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.7.tgz#fbc114b60ca42b30d9daf5858e4bd68bbedb6735"
+  integrity sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==
 
 path-root-regex@^0.1.0:
   version "0.1.2"
